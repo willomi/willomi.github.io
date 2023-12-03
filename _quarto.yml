@@ -3,7 +3,7 @@ project:
   output-dir: docs
 
 website:
-  title: "willomi.github.io"
+  title: "demosite"
   navbar:
     left:
       - href: index.qmd
