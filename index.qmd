@@ -1,5 +1,5 @@
 ---
-title: "willomi.github.io"
+title: "Michael Willox"
 ---
 
 This is a Quarto website.
