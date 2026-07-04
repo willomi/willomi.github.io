@@ -1,336 +1,1183 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Your First GitHub Webpage with Quarto & VS Code</title>
+  <style>
+    /* ── Fonts ── */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
 
-<meta charset="utf-8">
-<meta name="generator" content="quarto-1.2.335">
+    /* ── Tokens ── */
+    :root {
+      --brand:       #2563eb;
+      --brand-light: #dbeafe;
+      --brand-dark:  #1e40af;
+      --success:     #16a34a;
+      --success-bg:  #dcfce7;
+      --warn:        #d97706;
+      --warn-bg:     #fef9c3;
+      --bg:          #f8fafc;
+      --surface:     #ffffff;
+      --border:      #e2e8f0;
+      --text:        #1e293b;
+      --muted:       #64748b;
+      --code-bg:     #f1f5f9;
+      --radius:      10px;
+      --shadow:      0 1px 4px rgba(0,0,0,.08), 0 4px 16px rgba(0,0,0,.06);
+    }
 
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    /* ── Reset ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      font-size: 16px;
+    }
+    a { color: var(--brand); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    img { max-width: 100%; border-radius: var(--radius); border: 1px solid var(--border); }
+    code {
+      font-family: 'JetBrains Mono', monospace;
+      background: var(--code-bg);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: .875em;
+    }
+    pre {
+      background: #1e293b;
+      color: #e2e8f0;
+      border-radius: var(--radius);
+      padding: 1.25rem 1.5rem;
+      overflow-x: auto;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .875rem;
+      line-height: 1.6;
+      margin: 1rem 0;
+    }
+    pre code { background: none; padding: 0; color: inherit; font-size: inherit; }
 
+    /* ── Layout ── */
+    .page-wrap { max-width: 860px; margin: 0 auto; padding: 0 1.5rem; }
 
-<title>Southsiders 2023 - willomi.github.io</title>
-<style>
-code{white-space: pre-wrap;}
-span.smallcaps{font-variant: small-caps;}
-div.columns{display: flex; gap: min(4vw, 1.5em);}
-div.column{flex: auto; overflow-x: auto;}
-div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
-ul.task-list{list-style: none;}
-ul.task-list li input[type="checkbox"] {
-  width: 0.8em;
-  margin: 0 0.8em 0.2em -1.6em;
-  vertical-align: middle;
-}
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-    color: #aaaaaa;
-  }
-pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
-}
-code span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code span.at { color: #7d9029; } /* Attribute */
-code span.bn { color: #40a070; } /* BaseN */
-code span.bu { color: #008000; } /* BuiltIn */
-code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code span.ch { color: #4070a0; } /* Char */
-code span.cn { color: #880000; } /* Constant */
-code span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code span.dt { color: #902000; } /* DataType */
-code span.dv { color: #40a070; } /* DecVal */
-code span.er { color: #ff0000; font-weight: bold; } /* Error */
-code span.ex { } /* Extension */
-code span.fl { color: #40a070; } /* Float */
-code span.fu { color: #06287e; } /* Function */
-code span.im { color: #008000; font-weight: bold; } /* Import */
-code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
-code span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code span.op { color: #666666; } /* Operator */
-code span.ot { color: #007020; } /* Other */
-code span.pp { color: #bc7a00; } /* Preprocessor */
-code span.sc { color: #4070a0; } /* SpecialChar */
-code span.ss { color: #bb6688; } /* SpecialString */
-code span.st { color: #4070a0; } /* String */
-code span.va { color: #19177c; } /* Variable */
-code span.vs { color: #4070a0; } /* VerbatimString */
-code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-</style>
+    /* ── Header / Hero ── */
+    header {
+      background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 60%, #3b82f6 100%);
+      color: #fff;
+      padding: 3.5rem 0 3rem;
+    }
+    header .page-wrap { display: flex; flex-direction: column; gap: 1rem; }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: .4rem;
+      background: rgba(255,255,255,.15);
+      border: 1px solid rgba(255,255,255,.25);
+      border-radius: 99px;
+      padding: .3rem .85rem;
+      font-size: .8rem;
+      font-weight: 600;
+      letter-spacing: .04em;
+      width: fit-content;
+    }
+    header h1 { font-size: clamp(1.7rem, 4vw, 2.4rem); font-weight: 700; line-height: 1.2; }
+    header p { font-size: 1.05rem; opacity: .9; max-width: 580px; }
+    .hero-meta {
+      display: flex; flex-wrap: wrap; gap: 1.25rem;
+      font-size: .85rem; opacity: .8; margin-top: .5rem;
+    }
+    .hero-meta span { display: flex; align-items: center; gap: .35rem; }
 
+    /* ── Nav ── */
+    nav {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 1px 4px rgba(0,0,0,.06);
+    }
+    nav .page-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      overflow-x: auto;
+      scrollbar-width: none;
+      height: 52px;
+    }
+    nav a {
+      white-space: nowrap;
+      padding: .5rem .85rem;
+      border-radius: 6px;
+      font-size: .82rem;
+      font-weight: 500;
+      color: var(--muted);
+      transition: color .15s, background .15s;
+    }
+    nav a:hover { color: var(--brand); background: var(--brand-light); text-decoration: none; }
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<script src="site_libs/quarto-html/quarto.js"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
-<script id="quarto-search-options" type="application/json">{
-  "location": "navbar",
-  "copy-button": false,
-  "collapse-after": 3,
-  "panel-placement": "end",
-  "type": "overlay",
-  "limit": 20,
-  "language": {
-    "search-no-results-text": "No results",
-    "search-matching-documents-text": "matching documents",
-    "search-copy-link-title": "Copy link to search",
-    "search-hide-matches-text": "Hide additional matches",
-    "search-more-match-text": "more match in this document",
-    "search-more-matches-text": "more matches in this document",
-    "search-clear-button-title": "Clear",
-    "search-detached-cancel-button-title": "Cancel",
-    "search-submit-button-title": "Submit"
-  }
-}</script>
+    /* ── Main content ── */
+    main { padding: 2.5rem 0 4rem; }
+    .section-gap { margin-top: 3.5rem; }
 
+    /* ── Step cards ── */
+    .step {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+      padding: 2rem 2rem 1.75rem;
+      margin-top: 2rem;
+    }
+    .step-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      margin-bottom: 1.25rem;
+    }
+    .step-num {
+      background: var(--brand);
+      color: #fff;
+      font-weight: 700;
+      font-size: .95rem;
+      min-width: 2.4rem;
+      height: 2.4rem;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      margin-top: 3px;
+    }
+    .step h2 { font-size: 1.25rem; font-weight: 700; line-height: 1.3; }
+    .step h2 .subtitle { display: block; font-size: .82rem; font-weight: 500; color: var(--muted); margin-top: .2rem; }
+    .step p, .step li { color: #374151; }
+    .step ul, .step ol { padding-left: 1.4rem; display: flex; flex-direction: column; gap: .4rem; margin: .75rem 0; }
 
-<link rel="stylesheet" href="styles.css">
+    /* ── Concept boxes ── */
+    .concept {
+      background: var(--brand-light);
+      border-left: 4px solid var(--brand);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      padding: .85rem 1.1rem;
+      margin: 1rem 0;
+      font-size: .9rem;
+    }
+    .concept strong { color: var(--brand-dark); }
+
+    /* ── Tip / warning boxes ── */
+    .tip {
+      background: var(--success-bg);
+      border-left: 4px solid var(--success);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      padding: .85rem 1.1rem;
+      margin: 1rem 0;
+      font-size: .9rem;
+    }
+    .tip strong { color: var(--success); }
+    .warn-box {
+      background: var(--warn-bg);
+      border-left: 4px solid var(--warn);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      padding: .85rem 1.1rem;
+      margin: 1rem 0;
+      font-size: .9rem;
+    }
+    .warn-box strong { color: var(--warn); }
+
+    /* ── Screenshots ── */
+    .screenshot-wrap {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin: 1.25rem 0;
+      box-shadow: var(--shadow);
+    }
+    .screenshot-label {
+      background: #f8fafc;
+      border-bottom: 1px solid var(--border);
+      padding: .45rem 1rem;
+      font-size: .78rem;
+      font-weight: 600;
+      color: var(--muted);
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: .4rem;
+    }
+    .screenshot-wrap img { border: none; border-radius: 0; width: 100%; }
+
+    /* ── Diagram wrappers ── */
+    .diagram { margin: 1.5rem 0; text-align: center; }
+    .diagram figcaption { font-size: .8rem; color: var(--muted); margin-top: .5rem; font-style: italic; }
+
+    /* ── Progress tracker ── */
+    .progress-bar {
+      display: flex;
+      gap: .4rem;
+      margin: 2rem 0;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .progress-pill {
+      padding: .3rem .75rem;
+      border-radius: 99px;
+      font-size: .78rem;
+      font-weight: 600;
+      background: var(--code-bg);
+      color: var(--muted);
+      border: 1px solid var(--border);
+    }
+    .progress-pill.done { background: var(--success-bg); color: var(--success); border-color: #86efac; }
+    .progress-pill.active { background: var(--brand-light); color: var(--brand-dark); border-color: #93c5fd; }
+
+    /* ── What you'll need box ── */
+    .prereqs {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1rem;
+      margin: 1.25rem 0;
+    }
+    .prereq-card {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1rem;
+      text-align: center;
+      font-size: .88rem;
+    }
+    .prereq-card .icon { font-size: 1.8rem; margin-bottom: .4rem; }
+    .prereq-card strong { display: block; font-size: .9rem; margin-bottom: .2rem; }
+    .prereq-card span { color: var(--muted); font-size: .8rem; }
+
+    /* ── Button-style links ── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: .4rem;
+      background: var(--brand);
+      color: #fff !important;
+      padding: .55rem 1.2rem;
+      border-radius: 7px;
+      font-weight: 600;
+      font-size: .88rem;
+      margin: .5rem .25rem .5rem 0;
+      transition: background .15s;
+    }
+    .btn:hover { background: var(--brand-dark); text-decoration: none; }
+    .btn.outline {
+      background: transparent;
+      color: var(--brand) !important;
+      border: 1.5px solid var(--brand);
+    }
+    .btn.outline:hover { background: var(--brand-light); }
+
+    /* ── Divider ── */
+    hr { border: none; border-top: 1px solid var(--border); margin: 2rem 0; }
+
+    /* ── Footer ── */
+    footer {
+      background: #1e293b;
+      color: #94a3b8;
+      padding: 2rem 0;
+      text-align: center;
+      font-size: .85rem;
+    }
+    footer a { color: #7dd3fc; }
+
+    /* ── Responsive ── */
+    @media (max-width: 600px) {
+      .step { padding: 1.25rem; }
+      header { padding: 2rem 0; }
+    }
+  </style>
 </head>
+<body>
 
-<body class="nav-fixed">
-
-<div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top">
-    <nav class="navbar navbar-expand-lg navbar-dark ">
-      <div class="navbar-container container-fluid">
-      <div class="navbar-brand-container">
-    <a class="navbar-brand" href="./index.html">
-    <span class="navbar-title">Southsiders 2023</span>
-    </a>
-  </div>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
-  <span class="navbar-toggler-icon"></span>
-</button>
-          <div class="collapse navbar-collapse" id="navbarCollapse">
-            <ul class="navbar-nav navbar-nav-scroll me-auto">
-  <li class="nav-item">
-    <a class="nav-link active" href="./index.html" aria-current="page">
- <span class="menu-text">Home</span></a>
-  </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="./about.html">
- <span class="menu-text">About</span></a>
-  </li>  
-</ul>
-              <div id="quarto-search" class="" title="Search"></div>
-          </div> <!-- /navcollapse -->
-      </div> <!-- /container-fluid -->
-    </nav>
-</header>
-<!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
-<!-- sidebar -->
-<!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
+<!-- ════════════════════════════════════════════════
+     HEADER
+════════════════════════════════════════════════ -->
+<header>
+  <div class="page-wrap">
+    <div class="hero-badge">⚡ Beginner-Friendly Tutorial</div>
+    <h1>Build Your First GitHub Webpage<br>with Quarto &amp; VS Code</h1>
+    <p>A step-by-step guide for complete beginners — no prior experience with GitHub, Quarto, or VS Code needed.</p>
+    <div class="hero-meta">
+      <span>🕐 About 60–90 minutes</span>
+      <span>💻 Windows 11</span>
+      <span>🆓 Completely free</span>
     </div>
-<!-- main -->
-<main class="content" id="quarto-document-content">
-
-<header id="title-block-header" class="quarto-title-block default">
-<div class="quarto-title">
-<h1 class="title">willomi.github.io</h1>
-</div>
-
-
-
-<div class="quarto-title-meta">
-
-    
-  
-    
   </div>
-  
-
 </header>
 
-<p>This is a Quarto website.</p>
-<p>To learn more about Quarto websites visit <a href="https://quarto.org/docs/websites" class="uri">https://quarto.org/docs/websites</a>.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> <span class="sc">+</span> <span class="dv">1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 2</code></pre>
+<!-- ════════════════════════════════════════════════
+     STICKY NAV
+════════════════════════════════════════════════ -->
+<nav>
+  <div class="page-wrap">
+    <a href="#overview">Overview</a>
+    <a href="#step1">1 · GitHub Account</a>
+    <a href="#step2">2 · Install Git</a>
+    <a href="#step3">3 · Install VS Code</a>
+    <a href="#step4">4 · Install Quarto</a>
+    <a href="#step5">5 · Create a Repo</a>
+    <a href="#step6">6 · Connect VS Code</a>
+    <a href="#step7">7 · Write Your Page</a>
+    <a href="#step8">8 · Render &amp; Publish</a>
+    <a href="#done">🎉 Done!</a>
+  </div>
+</nav>
+
+<!-- ════════════════════════════════════════════════
+     MAIN
+════════════════════════════════════════════════ -->
+<main>
+<div class="page-wrap">
+
+  <!-- ── Overview ── -->
+  <section id="overview">
+    <h2 style="font-size:1.5rem; font-weight:700; margin-bottom:.75rem;">What We're Building</h2>
+    <p>By the end of this tutorial you'll have a <strong>live public webpage</strong> hosted for free on GitHub — something like <code>yourusername.github.io</code>. Anyone in the world can visit it in a browser.</p>
+
+    <div class="prereqs" style="margin-top:1.5rem;">
+      <div class="prereq-card">
+        <div class="icon">🐙</div>
+        <strong>GitHub</strong>
+        <span>Where your webpage lives on the internet (free)</span>
+      </div>
+      <div class="prereq-card">
+        <div class="icon">📄</div>
+        <strong>Quarto</strong>
+        <span>Turns simple text files into beautiful webpages</span>
+      </div>
+      <div class="prereq-card">
+        <div class="icon">🖥️</div>
+        <strong>VS Code</strong>
+        <span>A free text editor where you write your webpage</span>
+      </div>
+      <div class="prereq-card">
+        <div class="icon">🌐</div>
+        <strong>Git</strong>
+        <span>Software that sends your files from your computer to GitHub</span>
+      </div>
+    </div>
+
+    <!-- Big picture diagram -->
+    <div class="diagram">
+      <figure>
+        <svg viewBox="0 0 760 200" xmlns="http://www.w3.org/2000/svg" style="max-width:700px; width:100%;">
+          <defs>
+            <marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+              <path d="M0,0 L0,6 L8,3 z" fill="#94a3b8"/>
+            </marker>
+          </defs>
+          <!-- Boxes -->
+          <!-- Box 1: Your computer -->
+          <rect x="10" y="40" width="145" height="120" rx="12" fill="#eff6ff" stroke="#93c5fd" stroke-width="1.5"/>
+          <text x="82" y="64" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" font-weight="700" fill="#1e40af">YOUR COMPUTER</text>
+          <rect x="24" y="74" width="117" height="34" rx="7" fill="#2563eb"/>
+          <text x="82" y="96" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" font-weight="600" fill="#fff">VS Code</text>
+          <rect x="24" y="116" width="117" height="34" rx="7" fill="#7c3aed"/>
+          <text x="82" y="138" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" font-weight="600" fill="#fff">Quarto</text>
+
+          <!-- Arrow 1 -->
+          <line x1="158" y1="100" x2="216" y2="100" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arr)"/>
+          <text x="187" y="91" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#64748b">Git push</text>
+
+          <!-- Box 2: GitHub -->
+          <rect x="220" y="40" width="145" height="120" rx="12" fill="#f0fdf4" stroke="#86efac" stroke-width="1.5"/>
+          <text x="293" y="64" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" font-weight="700" fill="#14532d">GITHUB</text>
+          <rect x="234" y="74" width="117" height="34" rx="7" fill="#16a34a"/>
+          <text x="293" y="96" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" font-weight="600" fill="#fff">Repository</text>
+          <rect x="234" y="116" width="117" height="34" rx="7" fill="#15803d"/>
+          <text x="293" y="138" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" font-weight="600" fill="#fff">GitHub Pages</text>
+
+          <!-- Arrow 2 -->
+          <line x1="368" y1="100" x2="426" y2="100" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arr)"/>
+          <text x="397" y="91" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#64748b">Serves</text>
+
+          <!-- Box 3: Visitor -->
+          <rect x="430" y="40" width="145" height="120" rx="12" fill="#fdf4ff" stroke="#d8b4fe" stroke-width="1.5"/>
+          <text x="503" y="64" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" font-weight="700" fill="#581c87">VISITOR</text>
+          <rect x="444" y="74" width="117" height="34" rx="7" fill="#7e22ce"/>
+          <text x="503" y="91" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" font-weight="600" fill="#fff">yourusername</text>
+          <text x="503" y="104" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" font-weight="600" fill="#fff">.github.io</text>
+          <rect x="444" y="116" width="117" height="34" rx="7" fill="#6b21a8"/>
+          <text x="503" y="138" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" font-weight="600" fill="#fff">Any browser</text>
+
+          <!-- File label below -->
+          <text x="82" y="178" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#64748b">You write here</text>
+          <text x="293" y="178" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#64748b">Files stored here</text>
+          <text x="503" y="178" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#64748b">Anyone can view</text>
+        </svg>
+        <figcaption>The big picture: you write on your computer → Git sends it to GitHub → the world can see it</figcaption>
+      </figure>
+    </div>
+
+    <div class="tip">
+      <strong>✅ Good news:</strong> Everything in this tutorial is <strong>completely free</strong>. GitHub offers free webpage hosting (called "GitHub Pages"), and VS Code and Quarto are both free to download.
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════
+       STEP 1: Create GitHub Account
+  ═══════════════════════════════════════ -->
+  <div class="section-gap"></div>
+  <section id="step1">
+    <div class="step">
+      <div class="step-header">
+        <div class="step-num">1</div>
+        <h2>Create a GitHub Account
+          <span class="subtitle">Your free home on the internet for storing and sharing files</span>
+        </h2>
+      </div>
+
+      <div class="concept">
+        <strong>🐙 What is GitHub?</strong> Think of GitHub as a Google Drive for code and text files — but with superpowers. It stores your files online, keeps a history of every change you ever make, and (for our purposes) turns your files into a live public website automatically.
+      </div>
+
+      <ol>
+        <li>Open your web browser (Edge, Chrome, or Firefox) and go to <a href="https://github.com" target="_blank">github.com</a></li>
+        <li>Click the big <strong>Sign up</strong> button in the top-right corner</li>
+        <li>Enter your <strong>email address</strong>, create a <strong>password</strong>, and choose a <strong>username</strong></li>
+      </ol>
+
+      <div class="warn-box">
+        <strong>⚠️ Choose your username carefully!</strong> Your username becomes part of your webpage's web address. If your username is <code>jsmith</code>, your webpage will be at <code>jsmith.github.io</code>. You can change it later, but it's easier to pick a good one now — something professional, short, and memorable.
+      </div>
+
+      <ol start="4">
+        <li>GitHub will ask you to verify you're human — solve the small puzzle it shows you</li>
+        <li>Check your email inbox for a verification code from GitHub and enter it on the website</li>
+        <li>On the "Welcome to GitHub" screen, you can skip the optional questions by clicking <strong>Skip personalization</strong> at the bottom</li>
+      </ol>
+
+      <div class="screenshot-wrap">
+        <div class="screenshot-label">📸 Screenshot — GitHub sign-up page</div>
+        <img id="ss-github-signup" src="data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgNzIwIDQ2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iNzIwIiBoZWlnaHQ9IjQ2MCIgcng9IjEwIiBmaWxsPSIjMmQyZDJkIi8+PHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjcyMCIgaGVpZ2h0PSIzNiIgcng9IjEwIiBmaWxsPSIjZGVlMWU2Ii8+PHJlY3QgeD0iMCIgeT0iMTgiIHdpZHRoPSI3MjAiIGhlaWdodD0iMTgiIGZpbGw9IiNkZWUxZTYiLz48cmVjdCB4PSI1IiB5PSI1IiB3aWR0aD0iMTgwIiBoZWlnaHQ9IjMxIiByeD0iNSIgZmlsbD0id2hpdGUiLz48Y2lyY2xlIGN4PSIyMSIgY3k9IjIxIiByPSI2IiBmaWxsPSIjZGRlMWU3Ii8+PHRleHQgeD0iMzMiIHk9IjI2IiBmb250LWZhbWlseT0ic3lzdGVtLXVpLC1hcHBsZS1zeXN0ZW0sc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSIgZm9udC13ZWlnaHQ9IjQwMCIgZmlsbD0iIzM3NDE1MSIgdGV4dC1hbmNob3I9InN0YXJ0Ij5Kb2luIEdpdEh1YiDCtyBHaXRIdWI8L3RleHQ+PHRleHQgeD0iMTc0IiB5PSIyNiIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iOSIgZm9udC13ZWlnaHQ9IjQwMCIgZmlsbD0iIzljYTNhZiIgdGV4dC1hbmNob3I9InN0YXJ0Ij7inJU8L3RleHQ+PHRleHQgeD0iMTkzIiB5PSIyNyIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTUiIGZvbnQtd2VpZ2h0PSI0MDAiIGZpbGw9IiM5Y2EzYWYiIHRleHQtYW5jaG9yPSJzdGFydCI+KzwvdGV4dD48dGV4dCB4PSI2NDAiIHk9IjIxIiBmb250LWZhbWlseT0ic3lzdGVtLXVpLC1hcHBsZS1zeXN0ZW0sc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMiIgZm9udC13ZWlnaHQ9IjQwMCIgZmlsbD0iIzc3NyIgdGV4dC1hbmNob3I9InN0YXJ0Ij7ilIA8L3RleHQ+PHJlY3QgeD0iNjU4IiB5PSI5IiB3aWR0aD0iMTQiIGhlaWdodD0iMTEiIHJ4PSIyIiBmaWxsPSJub25lIiBzdHJva2U9IiM3NzciIHN0cm9rZS13aWR0aD0iMS4yIi8+PHRleHQgeD0iNjg2IiB5PSIyMiIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTMiIGZvbnQtd2VpZ2h0PSI0MDAiIGZpbGw9IiM3NzciIHRleHQtYW5jaG9yPSJzdGFydCI+4pyVPC90ZXh0PjxyZWN0IHg9IjAiIHk9IjM2IiB3aWR0aD0iNzIwIiBoZWlnaHQ9IjQwIiByeD0iMCIgZmlsbD0iI2YxZjNmNCIvPjx0ZXh0IHg9IjEwIiB5PSI2MiIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTYiIGZvbnQtd2VpZ2h0PSI0MDAiIGZpbGw9IiNhYWEiIHRleHQtYW5jaG9yPSJzdGFydCI+4oaQPC90ZXh0Pjx0ZXh0IHg9IjMwIiB5PSI2MiIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTYiIGZvbnQtd2VpZ2h0PSI0MDAiIGZpbGw9IiNkMGQwZDAiIHRleHQtYW5jaG9yPSJzdGFydCI+4oaSPC90ZXh0Pjx0ZXh0IHg9IjUwIiB5PSI2MCIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTMiIGZvbnQtd2VpZ2h0PSI0MDAiIGZpbGw9IiM3NzciIHRleHQtYW5jaG9yPSJzdGFydCI+4oa7PC90ZXh0PjxyZWN0IHg9IjY2IiB5PSI0NCIgd2lkdGg9IjYxOCIgaGVpZ2h0PSIyMiIgcng9IjExIiBmaWxsPSJ3aGl0ZSIgc3Ryb2tlPSIjZTBlMGUwIiBzdHJva2Utd2lkdGg9IjEuNSIvPjx0ZXh0IHg9IjgwIiB5PSI2MCIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiIGZvbnQtd2VpZ2h0PSI0MDAiIGZpbGw9IiMzNzQxNTEiIHRleHQtYW5jaG9yPSJzdGFydCI+Z2l0aHViLmNvbTwvdGV4dD48dGV4dCB4PSI2OTAiIHk9IjYwIiBmb250LWZhbWlseT0ic3lzdGVtLXVpLC1hcHBsZS1zeXN0ZW0sc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNSIgZm9udC13ZWlnaHQ9IjQwMCIgZmlsbD0iIzljYTNhZiIgdGV4dC1hbmNob3I9InN0YXJ0Ij7ii648L3RleHQ+PGxpbmUgeDE9IjAiIHkxPSI3NSIgeDI9IjcyMCIgeTI9Ijc1IiBzdHJva2U9IiNlNWU3ZWIiIHN0cm9rZS13aWR0aD0iMSIvPjxyZWN0IHg9IjAiIHk9Ijc2IiB3aWR0aD0iNzIwIiBoZWlnaHQ9IjM4NCIgcng9IjAiIGZpbGw9IndoaXRlIi8+PHRleHQgeD0iMzYwIiB5PSIxMjIiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksLWFwcGxlLXN5c3RlbSxzYW5zLXNlcmlmIiBmb250LXNpemU9IjQyIiBmb250LXdlaWdodD0iNDAwIiBmaWxsPSIjMjQyOTJmIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj7irKE8L3RleHQ+PHRleHQgeD0iMzYwIiB5PSIxNTYiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksLWFwcGxlLXN5c3RlbSxzYW5zLXNlcmlmIiBmb250LXNpemU9IjIyIiBmb250LXdlaWdodD0iNzAwIiBmaWxsPSIjMjQyOTJmIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5DcmVhdGUgeW91ciBhY2NvdW50PC90ZXh0Pjx0ZXh0IHg9IjM2MCIgeT0iMTc2IiBmb250LWZhbWlseT0ic3lzdGVtLXVpLC1hcHBsZS1zeXN0ZW0sc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMiIgZm9udC13ZWlnaHQ9IjQwMCIgZmlsbD0iIzY1NmQ3NiIgdGV4dC1hbmNob3I9Im1pZGRsZSI+Sm9pbiBtaWxsaW9ucyBvZiBkZXZlbG9wZXJzIGJ1aWxkaW5nIHRvZ2V0aGVyPC90ZXh0PjxsaW5lIHgxPSI2MCIgeTE9IjE5MCIgeDI9IjY2MCIgeTI9IjE5MCIgc3Ryb2tlPSIjZTVlN2ViIiBzdHJva2Utd2lkdGg9IjEiLz48dGV4dCB4PSIyMzAiIHk9IjIxMiIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTIiIGZvbnQtd2VpZ2h0PSI2MDAiIGZpbGw9IiMyNDI5MmYiIHRleHQtYW5jaG9yPSJzdGFydCI+VXNlcm5hbWU8L3RleHQ+PHJlY3QgeD0iMjMwIiB5PSIyMTkiIHdpZHRoPSIyNjAiIGhlaWdodD0iMzQiIHJ4PSI2IiBmaWxsPSJ3aGl0ZSIgc3Ryb2tlPSIjZDBkN2RlIiBzdHJva2Utd2lkdGg9IjEuNSIvPjx0ZXh0IHg9IjI0MCIgeT0iMjQwIiBmb250LWZhbWlseT0ic3lzdGVtLXVpLC1hcHBsZS1zeXN0ZW0sc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMiIgZm9udC13ZWlnaHQ9IjQwMCIgZmlsbD0iIzljYTNhZiIgdGV4dC1hbmNob3I9InN0YXJ0Ij55b3VybmFtZTwvdGV4dD48dGV4dCB4PSIyMzAiIHk9IjI2NCIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTIiIGZvbnQtd2VpZ2h0PSI2MDAiIGZpbGw9IiMyNDI5MmYiIHRleHQtYW5jaG9yPSJzdGFydCI+RW1haWwgYWRkcmVzczwvdGV4dD48cmVjdCB4PSIyMzAiIHk9IjI3MSIgd2lkdGg9IjI2MCIgaGVpZ2h0PSIzNCIgcng9IjYiIGZpbGw9IndoaXRlIiBzdHJva2U9IiNkMGQ3ZGUiIHN0cm9rZS13aWR0aD0iMS41Ii8+PHRleHQgeD0iMjQwIiB5PSIyOTIiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksLWFwcGxlLXN5c3RlbSxzYW5zLXNlcmlmIiBmb250LXNpemU9IjEyIiBmb250LXdlaWdodD0iNDAwIiBmaWxsPSIjOWNhM2FmIiB0ZXh0LWFuY2hvcj0ic3RhcnQiPnlvdUBleGFtcGxlLmNvbTwvdGV4dD48dGV4dCB4PSIyMzAiIHk9IjMxNiIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTIiIGZvbnQtd2VpZ2h0PSI2MDAiIGZpbGw9IiMyNDI5MmYiIHRleHQtYW5jaG9yPSJzdGFydCI+UGFzc3dvcmQ8L3RleHQ+PHJlY3QgeD0iMjMwIiB5PSIzMjMiIHdpZHRoPSIyNjAiIGhlaWdodD0iMzQiIHJ4PSI2IiBmaWxsPSJ3aGl0ZSIgc3Ryb2tlPSIjZDBkN2RlIiBzdHJva2Utd2lkdGg9IjEuNSIvPjx0ZXh0IHg9IjI0MCIgeT0iMzQ0IiBmb250LWZhbWlseT0ic3lzdGVtLXVpLC1hcHBsZS1zeXN0ZW0sc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMiIgZm9udC13ZWlnaHQ9IjQwMCIgZmlsbD0iIzljYTNhZiIgdGV4dC1hbmNob3I9InN0YXJ0Ij7igKLigKLigKLigKLigKLigKLigKLigKLigKLigKLigKLigKI8L3RleHQ+PHJlY3QgeD0iMjMwIiB5PSIzNzEiIHdpZHRoPSIyNjAiIGhlaWdodD0iMzYiIHJ4PSI2IiBmaWxsPSIjMmRhNDRlIi8+PHRleHQgeD0iMzYwIiB5PSIzOTMiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksLWFwcGxlLXN5c3RlbSxzYW5zLXNlcmlmIiBmb250LXNpemU9IjE0IiBmb250LXdlaWdodD0iNjAwIiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+Q3JlYXRlIGFjY291bnQ8L3RleHQ+PHRleHQgeD0iMzYwIiB5PSI0MjQiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksLWFwcGxlLXN5c3RlbSxzYW5zLXNlcmlmIiBmb250LXNpemU9IjEyIiBmb250LXdlaWdodD0iNDAwIiBmaWxsPSIjMDk2OWRhIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5BbHJlYWR5IGhhdmUgYW4gYWNjb3VudD8gIFNpZ24gaW4g4oaSPC90ZXh0Pjx0ZXh0IHg9IjM2MCIgeT0iNDUxIiBmb250LWZhbWlseT0ic3lzdGVtLXVpLC1hcHBsZS1zeXN0ZW0sc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMCIgZm9udC13ZWlnaHQ9IjQwMCIgZmlsbD0iIzljYTNhZiIgdGV4dC1hbmNob3I9Im1pZGRsZSI+QnkgY3JlYXRpbmcgYW4gYWNjb3VudCwgeW91IGFncmVlIHRvIHRoZSBUZXJtcyBvZiBTZXJ2aWNlLjwvdGV4dD48L3N2Zz4=" alt="GitHub sign-up page showing the email, password, and username fields" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'" />
+        <div style="display:none; align-items:center; justify-content:center; height:160px; background:#f8fafc; color:#94a3b8; font-size:.85rem; gap:.5rem;">
+          📸 Screenshot will appear here
+        </div>
+      </div>
+
+      <div class="tip">
+        <strong>✅ You're done when:</strong> you can see your GitHub dashboard — a page that says "Welcome to GitHub" or shows a home feed. You're now signed in!
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════
+       STEP 2: Install Git
+  ═══════════════════════════════════════ -->
+  <section id="step2" style="margin-top:1.5rem;">
+    <div class="step">
+      <div class="step-header">
+        <div class="step-num">2</div>
+        <h2>Install Git
+          <span class="subtitle">The behind-the-scenes tool that sends your files to GitHub</span>
+        </h2>
+      </div>
+
+      <div class="concept">
+        <strong>🔄 What is Git?</strong> Git is a free program that runs invisibly on your computer. It watches the files in your project and, when you're ready, <em>pushes</em> (sends) them up to GitHub. Think of it like a courier that delivers your files from your desk to the internet. GitHub (the website) and Git (the program) are two different things — you need both!
+      </div>
+
+      <ol>
+        <li>Go to <a href="https://git-scm.com/download/win" target="_blank">git-scm.com/download/win</a> — the download should start automatically</li>
+        <li>Once downloaded, open the file (it will be named something like <code>Git-2.x.x-64-bit.exe</code>)</li>
+        <li>A setup wizard will open. <strong>Click "Next" through every screen</strong> — the default settings are fine for beginners</li>
+        <li>On the screen that says <strong>"Adjusting your PATH environment"</strong>, make sure <strong>"Git from the command line and also from 3rd-party software"</strong> is selected (it usually is by default)</li>
+        <li>Keep clicking <strong>Next</strong> and then <strong>Install</strong></li>
+        <li>When it finishes, click <strong>Finish</strong></li>
+      </ol>
+
+      <div class="screenshot-wrap">
+        <div class="screenshot-label">📸 Screenshot — Git installer (PATH screen)</div>
+        <img src="data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgNTYwIDQzMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iNTYwIiBoZWlnaHQ9IjQzMCIgcng9IjgiIGZpbGw9IiNmMGYwZjAiLz48cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iNTYwIiBoZWlnaHQ9IjMwIiByeD0iOCIgZmlsbD0iIzAwNzhkNCIvPjxyZWN0IHg9IjAiIHk9IjE1IiB3aWR0aD0iNTYwIiBoZWlnaHQ9IjE1IiBmaWxsPSIjMDA3OGQ0Ii8+PHRleHQgeD0iMTIiIHk9IjIxIiBmb250LWZhbWlseT0ic3lzdGVtLXVpLC1hcHBsZS1zeXN0ZW0sc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMyIgZm9udC13ZWlnaHQ9IjQwMCIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJzdGFydCI+U2V0dXAgLSBHaXQgMi54IGZvciBXaW5kb3dzPC90ZXh0Pjx0ZXh0IHg9IjU0MCIgeT0iMjEiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksLWFwcGxlLXN5c3RlbSxzYW5zLXNlcmlmIiBmb250LXNpemU9IjEzIiBmb250LXdlaWdodD0iNDAwIiBmaWxsPSIjY2NlNGY3IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj7inJU8L3RleHQ+PHJlY3QgeD0iMCIgeT0iMzAiIHdpZHRoPSI1NjAiIGhlaWdodD0iNjUiIHJ4PSIwIiBmaWxsPSJ3aGl0ZSIvPjxyZWN0IHg9IjE0IiB5PSI0MCIgd2lkdGg9IjQyIiBoZWlnaHQ9IjQyIiByeD0iNiIgZmlsbD0iI2YwNTEzMyIvPjx0ZXh0IHg9IjM1IiB5PSI2OCIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGZvbnQtd2VpZ2h0PSI3MDAiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5HaXQ8L3RleHQ+PHRleHQgeD0iNjgiIHk9IjU2IiBmb250LWZhbWlseT0ic3lzdGVtLXVpLC1hcHBsZS1zeXN0ZW0sc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNCIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iIzFhMWExYSIgdGV4dC1hbmNob3I9InN0YXJ0Ij5BZGp1c3RpbmcgeW91ciBQQVRIIGVudmlyb25tZW50PC90ZXh0Pjx0ZXh0IHg9IjY4IiB5PSI3NCIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiIGZvbnQtd2VpZ2h0PSI0MDAiIGZpbGw9IiM1NTUiIHRleHQtYW5jaG9yPSJzdGFydCI+SG93IHdvdWxkIHlvdSBsaWtlIHRvIHVzZSBHaXQgZnJvbSB0aGUgY29tbWFuZCBsaW5lPzwvdGV4dD48bGluZSB4MT0iMCIgeTE9Ijk1IiB4Mj0iNTYwIiB5Mj0iOTUiIHN0cm9rZT0iI2U1ZTdlYiIgc3Ryb2tlLXdpZHRoPSIxIi8+PHJlY3QgeD0iMCIgeT0iOTUiIHdpZHRoPSI1NjAiIGhlaWdodD0iMjk1IiByeD0iMCIgZmlsbD0iI2YwZjBmMCIvPjxjaXJjbGUgY3g9IjI2IiBjeT0iMTE4IiByPSI4IiBmaWxsPSJ3aGl0ZSIgc3Ryb2tlPSIjZDBkN2RlIiBzdHJva2Utd2lkdGg9IjEuNSIvPjx0ZXh0IHg9IjQ0IiB5PSIxMjMiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksLWFwcGxlLXN5c3RlbSxzYW5zLXNlcmlmIiBmb250LXNpemU9IjEyIiBmb250LXdlaWdodD0iNjAwIiBmaWxsPSIjMzMzIiB0ZXh0LWFuY2hvcj0ic3RhcnQiPlVzZSBHaXQgZnJvbSBHaXQgQmFzaCBvbmx5PC90ZXh0Pjx0ZXh0IHg9IjQ0IiB5PSIxMzkiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksLWFwcGxlLXN5c3RlbSxzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIiBmb250LXdlaWdodD0iNDAwIiBmaWxsPSIjNzc3IiB0ZXh0LWFuY2hvcj0ic3RhcnQiPlBBVEggd2lsbCBub3QgYmUgbW9kaWZpZWQuIE9ubHkgdXNlIEdpdCBmcm9tIEdpdCBCYXNoLjwvdGV4dD48cmVjdCB4PSIxMiIgeT0iMTU2IiB3aWR0aD0iNTM2IiBoZWlnaHQ9IjcwIiByeD0iNCIgZmlsbD0id2hpdGUiIHN0cm9rZT0iIzAwNzhkNCIgc3Ryb2tlLXdpZHRoPSIyIi8+PGNpcmNsZSBjeD0iMjgiIGN5PSIxNzIiIHI9IjgiIGZpbGw9IiMwOTY5ZGEiLz48Y2lyY2xlIGN4PSIyOCIgY3k9IjE3MiIgcj0iMyIgZmlsbD0id2hpdGUiLz48dGV4dCB4PSI0NiIgeT0iMTc4IiBmb250LWZhbWlseT0ic3lzdGVtLXVpLC1hcHBsZS1zeXN0ZW0sc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMiIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iIzFhMWExYSIgdGV4dC1hbmNob3I9InN0YXJ0Ij5HaXQgZnJvbSB0aGUgY29tbWFuZCBsaW5lIGFuZCBhbHNvIGZyb20gM3JkLXBhcnR5IHNvZnR3YXJlPC90ZXh0Pjx0ZXh0IHg9IjQ2IiB5PSIxOTMiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksLWFwcGxlLXN5c3RlbSxzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIiBmb250LXdlaWdodD0iNDAwIiBmaWxsPSIjNDQ0IiB0ZXh0LWFuY2hvcj0ic3RhcnQiPihSZWNvbW1lbmRlZCkgIEFkZHMgR2l0IHRvIFBBVEggc28gaXQgd29ya3MgaW4gdGhlIHRlcm1pbmFsLDwvdGV4dD48dGV4dCB4PSI0NiIgeT0iMjA4IiBmb250LWZhbWlseT0ic3lzdGVtLXVpLC1hcHBsZS1zeXN0ZW0sc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSIgZm9udC13ZWlnaHQ9IjQwMCIgZmlsbD0iIzQ0NCIgdGV4dC1hbmNob3I9InN0YXJ0Ij5Db21tYW5kIFByb21wdCwgYW5kIFZTIENvZGUuPC90ZXh0PjxjaXJjbGUgY3g9IjI2IiBjeT0iMjQ0IiByPSI4IiBmaWxsPSJ3aGl0ZSIgc3Ryb2tlPSIjZDBkN2RlIiBzdHJva2Utd2lkdGg9IjEuNSIvPjx0ZXh0IHg9IjQ0IiB5PSIyNDkiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksLWFwcGxlLXN5c3RlbSxzYW5zLXNlcmlmIiBmb250LXNpemU9IjEyIiBmb250LXdlaWdodD0iNjAwIiBmaWxsPSIjMzMzIiB0ZXh0LWFuY2hvcj0ic3RhcnQiPlVzZSBHaXQgYW5kIG9wdGlvbmFsIFVuaXggdG9vbHMgZnJvbSB0aGUgQ29tbWFuZCBQcm9tcHQ8L3RleHQ+PHRleHQgeD0iNDQiIHk9IjI2NSIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiIGZvbnQtd2VpZ2h0PSI0MDAiIGZpbGw9IiNjMDAiIHRleHQtYW5jaG9yPSJzdGFydCI+V2FybmluZzogVGhpcyBvdmVycmlkZXMgc29tZSBXaW5kb3dzIHRvb2xzLjwvdGV4dD48bGluZSB4MT0iMCIgeTE9IjM5MCIgeDI9IjU2MCIgeTI9IjM5MCIgc3Ryb2tlPSIjZTVlN2ViIiBzdHJva2Utd2lkdGg9IjEiLz48cmVjdCB4PSIwIiB5PSIzOTAiIHdpZHRoPSI1NjAiIGhlaWdodD0iNDAiIHJ4PSIwIiBmaWxsPSIjZjBmMGYwIi8+PHJlY3QgeD0iMzYwIiB5PSIzOTgiIHdpZHRoPSI4MCIgaGVpZ2h0PSIyNCIgcng9IjQiIGZpbGw9IiNlMGUwZTAiLz48dGV4dCB4PSI0MDAiIHk9IjQxNCIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTMiIGZvbnQtd2VpZ2h0PSI2MDAiIGZpbGw9IiMzMzMiIHRleHQtYW5jaG9yPSJtaWRkbGUiPiZsdDsgQmFjazwvdGV4dD48cmVjdCB4PSI0NDgiIHk9IjM5OCIgd2lkdGg9IjgwIiBoZWlnaHQ9IjI0IiByeD0iNCIgZmlsbD0iIzAwNzhkNCIvPjx0ZXh0IHg9IjQ4OCIgeT0iNDE0IiBmb250LWZhbWlseT0ic3lzdGVtLXVpLC1hcHBsZS1zeXN0ZW0sc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMyIgZm9udC13ZWlnaHQ9IjYwMCIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiPk5leHQgJmd0OzwvdGV4dD48dGV4dCB4PSI1MzgiIHk9IjQxMCIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTIiIGZvbnQtd2VpZ2h0PSI0MDAiIGZpbGw9IiMzMzMiIHRleHQtYW5jaG9yPSJzdGFydCI+Q2FuY2VsPC90ZXh0Pjwvc3ZnPg==" alt="Git installer showing the PATH environment setting" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'" />
+        <div style="display:none; align-items:center; justify-content:center; height:160px; background:#f8fafc; color:#94a3b8; font-size:.85rem; gap:.5rem;">
+          📸 Screenshot will appear here
+        </div>
+      </div>
+
+      <!-- Verify Git diagram -->
+      <h3 style="font-size:1rem; font-weight:600; margin:.75rem 0 .4rem;">Verify the installation</h3>
+      <p>After installing, you can check that Git is working. Press the <kbd style="background:#e2e8f0; border-radius:4px; padding:1px 6px; font-size:.85em; font-family:monospace;">Windows</kbd> key, type <strong>cmd</strong>, and press Enter to open a black terminal window. Then type:</p>
+      <pre><code>git --version</code></pre>
+      <p>You should see something like <code>git version 2.45.0</code>. If you do, Git is installed correctly!</p>
+
+      <div class="tip">
+        <strong>✅ You're done when:</strong> <code>git --version</code> shows a version number in the terminal.
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════
+       STEP 3: Install VS Code
+  ═══════════════════════════════════════ -->
+  <section id="step3" style="margin-top:1.5rem;">
+    <div class="step">
+      <div class="step-header">
+        <div class="step-num">3</div>
+        <h2>Install Visual Studio Code (VS Code)
+          <span class="subtitle">Your free text editor for writing and managing your webpage files</span>
+        </h2>
+      </div>
+
+      <div class="concept">
+        <strong>🖥️ What is VS Code?</strong> VS Code (short for "Visual Studio Code") is a free text editor made by Microsoft. It's like Notepad or Word — but designed specifically for writing code and webpage files. It has helpful features like colour-coding your text, suggesting completions as you type, and a built-in panel to send your files to GitHub.
+      </div>
+
+      <ol>
+        <li>Go to <a href="https://code.visualstudio.com" target="_blank">code.visualstudio.com</a></li>
+        <li>Click the big blue <strong>Download for Windows</strong> button</li>
+        <li>Open the downloaded file (named something like <code>VSCodeUserSetup-x64-1.x.x.exe</code>)</li>
+        <li>Accept the license agreement and click <strong>Next</strong></li>
+        <li>On the "Select Additional Tasks" screen, check <strong>"Add to PATH"</strong> and <strong>"Open with Code"</strong> options</li>
+        <li>Click <strong>Install</strong>, then <strong>Finish</strong> — VS Code will launch automatically</li>
+      </ol>
+
+      <div class="screenshot-wrap">
+        <div class="screenshot-label">📸 Screenshot — VS Code download page</div>
+        <img src="data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgNzIwIDQ2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iNzIwIiBoZWlnaHQ9IjQ2MCIgcng9IjEwIiBmaWxsPSIjMmQyZDJkIi8+PHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjcyMCIgaGVpZ2h0PSIzNiIgcng9IjEwIiBmaWxsPSIjZGVlMWU2Ii8+PHJlY3QgeD0iMCIgeT0iMTgiIHdpZHRoPSI3MjAiIGhlaWdodD0iMTgiIGZpbGw9IiNkZWUxZTYiLz48cmVjdCB4PSI1IiB5PSI1IiB3aWR0aD0iMTgwIiBoZWlnaHQ9IjMxIiByeD0iNSIgZmlsbD0id2hpdGUiLz48Y2lyY2xlIGN4PSIyMSIgY3k9IjIxIiByPSI2IiBmaWxsPSIjZGRlMWU3Ii8+PHRleHQgeD0iMzMiIHk9IjI2IiBmb250LWZhbWlseT0ic3lzdGVtLXVpLC1hcHBsZS1zeXN0ZW0sc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSIgZm9udC13ZWlnaHQ9IjQwMCIgZmlsbD0iIzM3NDE1MSIgdGV4dC1hbmNob3I9InN0YXJ0Ij5WaXN1YWwgU3R1ZGlvIENvZGU8L3RleHQ+PHRleHQgeD0iMTc0IiB5PSIyNiIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iOSIgZm9udC13ZWlnaHQ9IjQwMCIgZmlsbD0iIzljYTNhZiIgdGV4dC1hbmNob3I9InN0YXJ0Ij7inJU8L3RleHQ+PHRleHQgeD0iMTkzIiB5PSIyNyIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTUiIGZvbnQtd2VpZ2h0PSI0MDAiIGZpbGw9IiM5Y2EzYWYiIHRleHQtYW5jaG9yPSJzdGFydCI+KzwvdGV4dD48dGV4dCB4PSI2NDAiIHk9IjIxIiBmb250LWZhbWlseT0ic3lzdGVtLXVpLC1hcHBsZS1zeXN0ZW0sc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMiIgZm9udC13ZWlnaHQ9IjQwMCIgZmlsbD0iIzc3NyIgdGV4dC1hbmNob3I9InN0YXJ0Ij7ilIA8L3RleHQ+PHJlY3QgeD0iNjU4IiB5PSI5IiB3aWR0aD0iMTQiIGhlaWdodD0iMTEiIHJ4PSIyIiBmaWxsPSJub25lIiBzdHJva2U9IiM3NzciIHN0cm9rZS13aWR0aD0iMS4yIi8+PHRleHQgeD0iNjg2IiB5PSIyMiIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTMiIGZvbnQtd2VpZ2h0PSI0MDAiIGZpbGw9IiM3NzciIHRleHQtYW5jaG9yPSJzdGFydCI+4pyVPC90ZXh0PjxyZWN0IHg9IjAiIHk9IjM2IiB3aWR0aD0iNzIwIiBoZWlnaHQ9IjQwIiByeD0iMCIgZmlsbD0iI2YxZjNmNCIvPjx0ZXh0IHg9IjEwIiB5PSI2MiIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTYiIGZvbnQtd2VpZ2h0PSI0MDAiIGZpbGw9IiNhYWEiIHRleHQtYW5jaG9yPSJzdGFydCI+4oaQPC90ZXh0Pjx0ZXh0IHg9IjMwIiB5PSI2MiIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTYiIGZvbnQtd2VpZ2h0PSI0MDAiIGZpbGw9IiNkMGQwZDAiIHRleHQtYW5jaG9yPSJzdGFydCI+4oaSPC90ZXh0Pjx0ZXh0IHg9IjUwIiB5PSI2MCIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTMiIGZvbnQtd2VpZ2h0PSI0MDAiIGZpbGw9IiM3NzciIHRleHQtYW5jaG9yPSJzdGFydCI+4oa7PC90ZXh0PjxyZWN0IHg9IjY2IiB5PSI0NCIgd2lkdGg9IjYxOCIgaGVpZ2h0PSIyMiIgcng9IjExIiBmaWxsPSJ3aGl0ZSIgc3Ryb2tlPSIjZTBlMGUwIiBzdHJva2Utd2lkdGg9IjEuNSIvPjx0ZXh0IHg9IjgwIiB5PSI2MCIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiIGZvbnQtd2VpZ2h0PSI0MDAiIGZpbGw9IiMzNzQxNTEiIHRleHQtYW5jaG9yPSJzdGFydCI+Y29kZS52aXN1YWxzdHVkaW8uY29tPC90ZXh0Pjx0ZXh0IHg9IjY5MCIgeT0iNjAiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksLWFwcGxlLXN5c3RlbSxzYW5zLXNlcmlmIiBmb250LXNpemU9IjE1IiBmb250LXdlaWdodD0iNDAwIiBmaWxsPSIjOWNhM2FmIiB0ZXh0LWFuY2hvcj0ic3RhcnQiPuKLrjwvdGV4dD48bGluZSB4MT0iMCIgeTE9Ijc1IiB4Mj0iNzIwIiB5Mj0iNzUiIHN0cm9rZT0iI2U1ZTdlYiIgc3Ryb2tlLXdpZHRoPSIxIi8+PHJlY3QgeD0iMCIgeT0iNzYiIHdpZHRoPSI3MjAiIGhlaWdodD0iMzg0IiByeD0iMCIgZmlsbD0id2hpdGUiLz48cmVjdCB4PSIwIiB5PSI3NiIgd2lkdGg9IjcyMCIgaGVpZ2h0PSI2MiIgcng9IjAiIGZpbGw9IiMxZjI5MzciLz48cmVjdCB4PSIxOCIgeT0iODgiIHdpZHRoPSIzOCIgaGVpZ2h0PSIzOCIgcng9IjQiIGZpbGw9IiMwMDdhY2MiLz48dGV4dCB4PSIzNyIgeT0iMTEzIiBmb250LWZhbWlseT0ic3lzdGVtLXVpLC1hcHBsZS1zeXN0ZW0sc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNSIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiPlZTPC90ZXh0Pjx0ZXh0IHg9IjY2IiB5PSIxMDMiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksLWFwcGxlLXN5c3RlbSxzYW5zLXNlcmlmIiBmb250LXNpemU9IjE1IiBmb250LXdlaWdodD0iNjAwIiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9InN0YXJ0Ij5WaXN1YWwgU3R1ZGlvIENvZGU8L3RleHQ+PHRleHQgeD0iNjYiIHk9IjEyMSIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiIGZvbnQtd2VpZ2h0PSI0MDAiIGZpbGw9IiM5Y2EzYWYiIHRleHQtYW5jaG9yPSJzdGFydCI+Q29kZSBlZGl0aW5nLiBSZWRlZmluZWQuPC90ZXh0Pjx0ZXh0IHg9IjM1MCIgeT0iMTExIiBmb250LWZhbWlseT0ic3lzdGVtLXVpLC1hcHBsZS1zeXN0ZW0sc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSIgZm9udC13ZWlnaHQ9IjQwMCIgZmlsbD0iI2QxZDVkYiIgdGV4dC1hbmNob3I9InN0YXJ0Ij5Eb2NzPC90ZXh0Pjx0ZXh0IHg9IjQwMCIgeT0iMTExIiBmb250LWZhbWlseT0ic3lzdGVtLXVpLC1hcHBsZS1zeXN0ZW0sc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSIgZm9udC13ZWlnaHQ9IjQwMCIgZmlsbD0iI2QxZDVkYiIgdGV4dC1hbmNob3I9InN0YXJ0Ij5VcGRhdGVzPC90ZXh0Pjx0ZXh0IHg9IjQ2MCIgeT0iMTExIiBmb250LWZhbWlseT0ic3lzdGVtLXVpLC1hcHBsZS1zeXN0ZW0sc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSIgZm9udC13ZWlnaHQ9IjQwMCIgZmlsbD0iI2QxZDVkYiIgdGV4dC1hbmNob3I9InN0YXJ0Ij5CbG9nPC90ZXh0Pjx0ZXh0IHg9IjUwMCIgeT0iMTExIiBmb250LWZhbWlseT0ic3lzdGVtLXVpLC1hcHBsZS1zeXN0ZW0sc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSIgZm9udC13ZWlnaHQ9IjQwMCIgZmlsbD0iI2QxZDVkYiIgdGV4dC1hbmNob3I9InN0YXJ0Ij5FeHRlbnNpb25zPC90ZXh0Pjx0ZXh0IHg9IjM2MCIgeT0iMTg0IiBmb250LWZhbWlseT0ic3lzdGVtLXVpLC1hcHBsZS1zeXN0ZW0sc2Fucy1zZXJpZiIgZm9udC1zaXplPSIyMiIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iIzExMTgyNyIgdGV4dC1hbmNob3I9Im1pZGRsZSI+RG93bmxvYWQgVmlzdWFsIFN0dWRpbyBDb2RlPC90ZXh0Pjx0ZXh0IHg9IjM2MCIgeT0iMjA4IiBmb250LWZhbWlseT0ic3lzdGVtLXVpLC1hcHBsZS1zeXN0ZW0sc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMyIgZm9udC13ZWlnaHQ9IjQwMCIgZmlsbD0iIzZiNzI4MCIgdGV4dC1hbmNob3I9Im1pZGRsZSI+RnJlZS4gQnVpbHQgb24gb3BlbiBzb3VyY2UuIFJ1bnMgZXZlcnl3aGVyZS48L3RleHQ+PHJlY3QgeD0iMjU0IiB5PSIyMjYiIHdpZHRoPSIyMTIiIGhlaWdodD0iNDYiIHJ4PSI2IiBmaWxsPSIjMDA3YWNjIi8+PHRleHQgeD0iMzYwIiB5PSIyNTMiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksLWFwcGxlLXN5c3RlbSxzYW5zLXNlcmlmIiBmb250LXNpemU9IjE0IiBmb250LXdlaWdodD0iNjAwIiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+4oaTICBEb3dubG9hZCBmb3IgV2luZG93czwvdGV4dD48dGV4dCB4PSIzNjAiIHk9IjI4NiIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiIGZvbnQtd2VpZ2h0PSI0MDAiIGZpbGw9IiM5Y2EzYWYiIHRleHQtYW5jaG9yPSJtaWRkbGUiPlN0YWJsZSBCdWlsZCDCtyB2MS45MCDCtyBTeXN0ZW0gSW5zdGFsbGVyPC90ZXh0PjxsaW5lIHgxPSIxMDAiIHkxPSIzMTIiIHgyPSI2MjAiIHkyPSIzMTIiIHN0cm9rZT0iI2U1ZTdlYiIgc3Ryb2tlLXdpZHRoPSIxIi8+PHRleHQgeD0iMTkwIiB5PSIzMjgiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksLWFwcGxlLXN5c3RlbSxzYW5zLXNlcmlmIiBmb250LXNpemU9IjEyIiBmb250LXdlaWdodD0iNDAwIiBmaWxsPSIjNmI3MjgwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5MaW51eDwvdGV4dD48dGV4dCB4PSIzNjAiIHk9IjMyOCIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTIiIGZvbnQtd2VpZ2h0PSI0MDAiIGZpbGw9IiM2YjcyODAiIHRleHQtYW5jaG9yPSJtaWRkbGUiPm1hY09TPC90ZXh0Pjx0ZXh0IHg9IjUzMCIgeT0iMzI4IiBmb250LWZhbWlseT0ic3lzdGVtLXVpLC1hcHBsZS1zeXN0ZW0sc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMiIgZm9udC13ZWlnaHQ9IjYwMCIgZmlsbD0iIzAwN2FjYyIgdGV4dC1hbmNob3I9Im1pZGRsZSI+V2luZG93czwvdGV4dD48dGV4dCB4PSIxMjAiIHk9IjM2MCIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTIiIGZvbnQtd2VpZ2h0PSI0MDAiIGZpbGw9IiMzNzQxNTEiIHRleHQtYW5jaG9yPSJzdGFydCI+4pyTICBJbnRlbGxpU2Vuc2U8L3RleHQ+PHRleHQgeD0iMTIwIiB5PSIzODAiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksLWFwcGxlLXN5c3RlbSxzYW5zLXNlcmlmIiBmb250LXNpemU9IjEyIiBmb250LXdlaWdodD0iNDAwIiBmaWxsPSIjMzc0MTUxIiB0ZXh0LWFuY2hvcj0ic3RhcnQiPuKckyAgUnVuIGFuZCBEZWJ1ZzwvdGV4dD48dGV4dCB4PSIzNDAiIHk9IjM2MCIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTIiIGZvbnQtd2VpZ2h0PSI0MDAiIGZpbGw9IiMzNzQxNTEiIHRleHQtYW5jaG9yPSJzdGFydCI+4pyTICBCdWlsdC1pbiBHaXQ8L3RleHQ+PHRleHQgeD0iMzQwIiB5PSIzODAiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksLWFwcGxlLXN5c3RlbSxzYW5zLXNlcmlmIiBmb250LXNpemU9IjEyIiBmb250LXdlaWdodD0iNDAwIiBmaWxsPSIjMzc0MTUxIiB0ZXh0LWFuY2hvcj0ic3RhcnQiPuKckyAgRXh0ZW5zaW9uczwvdGV4dD48L3N2Zz4=" alt="VS Code website with the Windows download button" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'" />
+        <div style="display:none; align-items:center; justify-content:center; height:160px; background:#f8fafc; color:#94a3b8; font-size:.85rem; gap:.5rem;">
+          📸 Screenshot will appear here
+        </div>
+      </div>
+
+      <!-- VS Code layout diagram -->
+      <h3 style="font-size:1rem; font-weight:600; margin:1.25rem 0 .5rem;">Getting to know VS Code</h3>
+      <div class="diagram">
+        <figure>
+          <svg viewBox="0 0 700 360" xmlns="http://www.w3.org/2000/svg" style="max-width:680px; width:100%;">
+            <!-- Window chrome -->
+            <rect x="0" y="0" width="700" height="360" rx="10" fill="#1e1e1e"/>
+            <rect x="0" y="0" width="700" height="28" rx="10" fill="#3c3c3c"/>
+            <rect x="0" y="14" width="700" height="14" fill="#3c3c3c"/>
+            <circle cx="16" cy="14" r="5" fill="#ff5f56"/>
+            <circle cx="32" cy="14" r="5" fill="#ffbd2e"/>
+            <circle cx="48" cy="14" r="5" fill="#27c93f"/>
+            <text x="350" y="19" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#cccccc">Visual Studio Code</text>
+
+            <!-- Activity bar (left icons) -->
+            <rect x="0" y="28" width="44" height="332" fill="#333333"/>
+            <!-- Icons -->
+            <rect x="10" y="40" width="24" height="24" rx="4" fill="#007acc"/>
+            <text x="22" y="57" text-anchor="middle" font-family="sans-serif" font-size="13" fill="white">📁</text>
+            <rect x="10" y="74" width="24" height="24" rx="4" fill="transparent"/>
+            <text x="22" y="91" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#858585">🔍</text>
+            <rect x="10" y="108" width="24" height="24" rx="4" fill="transparent"/>
+            <text x="22" y="125" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#858585">🔀</text>
+
+            <!-- Sidebar -->
+            <rect x="44" y="28" width="160" height="332" fill="#252526"/>
+            <text x="52" y="50" font-family="Inter,sans-serif" font-size="9" fill="#bbbbbb" font-weight="600" letter-spacing="1">EXPLORER</text>
+            <text x="52" y="70" font-family="Inter,sans-serif" font-size="10" fill="#cccccc">📁 my-webpage</text>
+            <text x="64" y="88" font-family="Inter,sans-serif" font-size="10" fill="#4fc1ff">  📄 index.qmd</text>
+            <text x="64" y="104" font-family="Inter,sans-serif" font-size="10" fill="#cccccc">  📄 _quarto.yml</text>
+            <text x="64" y="120" font-family="Inter,sans-serif" font-size="10" fill="#cccccc">  📁 docs/</text>
+
+            <!-- Editor area -->
+            <rect x="204" y="28" width="496" height="332" fill="#1e1e1e"/>
+            <!-- Tab bar -->
+            <rect x="204" y="28" width="496" height="30" fill="#2d2d2d"/>
+            <rect x="204" y="28" width="120" height="30" fill="#1e1e1e"/>
+            <text x="214" y="47" font-family="Inter,sans-serif" font-size="10" fill="#cccccc">📄 index.qmd</text>
+
+            <!-- Code content -->
+            <text x="220" y="80" font-family="JetBrains Mono,monospace" font-size="10" fill="#569cd6">---</text>
+            <text x="220" y="96" font-family="JetBrains Mono,monospace" font-size="10" fill="#9cdcfe">title</text>
+            <text x="260" y="96" font-family="JetBrains Mono,monospace" font-size="10" fill="#cccccc">: </text>
+            <text x="270" y="96" font-family="JetBrains Mono,monospace" font-size="10" fill="#ce9178">"My Webpage"</text>
+            <text x="220" y="112" font-family="JetBrains Mono,monospace" font-size="10" fill="#9cdcfe">format</text>
+            <text x="268" y="112" font-family="JetBrains Mono,monospace" font-size="10" fill="#cccccc">: html</text>
+            <text x="220" y="128" font-family="JetBrains Mono,monospace" font-size="10" fill="#569cd6">---</text>
+            <text x="220" y="152" font-family="JetBrains Mono,monospace" font-size="10" fill="#6a9955"># Hello World!</text>
+            <text x="220" y="168" font-family="JetBrains Mono,monospace" font-size="10" fill="#cccccc">This is my first webpage.</text>
+
+            <!-- Labels outside -->
+            <!-- Activity bar label -->
+            <line x1="22" y1="52" x2="22" y2="155" stroke="none"/>
+
+            <!-- Annotations -->
+            <!-- Sidebar annotation -->
+            <rect x="44" y="290" width="160" height="28" rx="0" fill="#0078d4" opacity="0.15"/>
+            <text x="124" y="308" text-anchor="middle" font-family="Inter,sans-serif" font-size="9" fill="#4fc1ff">← Your files listed here</text>
+
+            <!-- Editor annotation -->
+            <rect x="204" y="290" width="496" height="28" rx="0" fill="#0078d4" opacity="0.1"/>
+            <text x="452" y="308" text-anchor="middle" font-family="Inter,sans-serif" font-size="9" fill="#9cdcfe">← You type your webpage content here</text>
+
+            <!-- Status bar -->
+            <rect x="0" y="340" width="700" height="20" fill="#007acc"/>
+            <text x="10" y="354" font-family="Inter,sans-serif" font-size="9" fill="white">main ✓</text>
+            <text x="650" y="354" text-anchor="end" font-family="Inter,sans-serif" font-size="9" fill="white">Quarto</text>
+          </svg>
+          <figcaption>The VS Code interface: file list on the left, your writing area on the right</figcaption>
+        </figure>
+      </div>
+
+      <div class="tip">
+        <strong>✅ You're done when:</strong> VS Code is open and you can see its dark-themed window with a sidebar on the left.
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════
+       STEP 4: Install Quarto
+  ═══════════════════════════════════════ -->
+  <section id="step4" style="margin-top:1.5rem;">
+    <div class="step">
+      <div class="step-header">
+        <div class="step-num">4</div>
+        <h2>Install Quarto
+          <span class="subtitle">The tool that converts your text file into a beautiful webpage</span>
+        </h2>
+      </div>
+
+      <div class="concept">
+        <strong>📄 What is Quarto?</strong> Quarto is a free tool that reads a simple text file you write (called a <code>.qmd</code> file) and converts it into a polished HTML webpage. You write in plain, readable text — Quarto handles all the technical HTML formatting for you. Think of it like Microsoft Word's "Save as PDF" but for webpages.
+      </div>
+
+      <!-- How Quarto works diagram -->
+      <div class="diagram">
+        <figure>
+          <svg viewBox="0 0 680 140" xmlns="http://www.w3.org/2000/svg" style="max-width:640px; width:100%;">
+            <defs>
+              <marker id="arr2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+                <path d="M0,0 L0,6 L8,3 z" fill="#64748b"/>
+              </marker>
+            </defs>
+            <!-- Input: .qmd file -->
+            <rect x="10" y="20" width="160" height="100" rx="10" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1.5"/>
+            <text x="90" y="44" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" font-weight="700" fill="#475569">index.qmd</text>
+            <text x="90" y="60" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="9" fill="#64748b"># My Page</text>
+            <text x="90" y="74" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="9" fill="#64748b">Hello world!</text>
+            <text x="90" y="88" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="9" fill="#64748b">**Bold text**</text>
+            <text x="90" y="108" text-anchor="middle" font-family="Inter,sans-serif" font-size="9" fill="#94a3b8">Plain text you write</text>
+
+            <!-- Arrow + Quarto label -->
+            <line x1="174" y1="70" x2="236" y2="70" stroke="#64748b" stroke-width="1.5" marker-end="url(#arr2)"/>
+            <rect x="178" y="50" width="54" height="26" rx="6" fill="#7c3aed"/>
+            <text x="205" y="68" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" font-weight="700" fill="white">Quarto</text>
+
+            <!-- Output: HTML file -->
+            <rect x="240" y="20" width="180" height="100" rx="10" fill="#eff6ff" stroke="#93c5fd" stroke-width="1.5"/>
+            <text x="330" y="44" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" font-weight="700" fill="#1e40af">index.html</text>
+            <!-- Mini webpage mockup -->
+            <rect x="258" y="52" width="143" height="58" rx="4" fill="white" stroke="#dbeafe" stroke-width="1"/>
+            <rect x="258" y="52" width="143" height="14" rx="4" fill="#2563eb"/>
+            <rect x="258" y="60" width="143" height="6" rx="0" fill="#2563eb"/>
+            <text x="262" y="62" font-family="Inter,sans-serif" font-size="7" fill="white">My Page</text>
+            <text x="262" y="80" font-family="Inter,sans-serif" font-size="7" fill="#374151">Hello world!</text>
+            <text x="262" y="92" font-family="Inter,sans-serif" font-size="7" fill="#374151" font-weight="700">Bold text</text>
+            <text x="330" y="113" text-anchor="middle" font-family="Inter,sans-serif" font-size="9" fill="#94a3b8">Styled webpage Quarto makes</text>
+
+            <!-- Arrow 2 -->
+            <line x1="424" y1="70" x2="476" y2="70" stroke="#64748b" stroke-width="1.5" marker-end="url(#arr2)"/>
+            <text x="450" y="60" text-anchor="middle" font-family="Inter,sans-serif" font-size="9" fill="#64748b">Git push</text>
+
+            <!-- Output: Live website -->
+            <rect x="480" y="20" width="185" height="100" rx="10" fill="#f0fdf4" stroke="#86efac" stroke-width="1.5"/>
+            <text x="572" y="44" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" font-weight="700" fill="#14532d">Live Website</text>
+            <text x="572" y="60" text-anchor="middle" font-family="Inter,sans-serif" font-size="9" fill="#16a34a">username.github.io</text>
+            <!-- Globe icon -->
+            <circle cx="572" cy="88" r="22" fill="#dcfce7" stroke="#86efac" stroke-width="1"/>
+            <text x="572" y="94" text-anchor="middle" font-family="sans-serif" font-size="20">🌐</text>
+            <text x="572" y="113" text-anchor="middle" font-family="Inter,sans-serif" font-size="9" fill="#94a3b8">Anyone can visit this</text>
+          </svg>
+          <figcaption>Quarto converts your plain text file into a polished webpage that gets published online</figcaption>
+        </figure>
+      </div>
+
+      <h3 style="font-size:1rem; font-weight:600; margin:.75rem 0 .4rem;">Download and install Quarto</h3>
+      <ol>
+        <li>Go to <a href="https://quarto.org/docs/get-started/" target="_blank">quarto.org/docs/get-started</a></li>
+        <li>Click the <strong>Download Quarto CLI</strong> button for Windows</li>
+        <li>Open the downloaded <code>.msi</code> installer file</li>
+        <li>Click through the installer with all default settings and click <strong>Finish</strong></li>
+      </ol>
+
+      <div class="screenshot-wrap">
+        <div class="screenshot-label">📸 Screenshot — Quarto download page</div>
+        <img src="data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgNzIwIDQ2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iNzIwIiBoZWlnaHQ9IjQ2MCIgcng9IjEwIiBmaWxsPSIjMmQyZDJkIi8+PHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjcyMCIgaGVpZ2h0PSIzNiIgcng9IjEwIiBmaWxsPSIjZGVlMWU2Ii8+PHJlY3QgeD0iMCIgeT0iMTgiIHdpZHRoPSI3MjAiIGhlaWdodD0iMTgiIGZpbGw9IiNkZWUxZTYiLz48cmVjdCB4PSI1IiB5PSI1IiB3aWR0aD0iMTgwIiBoZWlnaHQ9IjMxIiByeD0iNSIgZmlsbD0id2hpdGUiLz48Y2lyY2xlIGN4PSIyMSIgY3k9IjIxIiByPSI2IiBmaWxsPSIjZGRlMWU3Ii8+PHRleHQgeD0iMzMiIHk9IjI2IiBmb250LWZhbWlseT0ic3lzdGVtLXVpLC1hcHBsZS1zeXN0ZW0sc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSIgZm9udC13ZWlnaHQ9IjQwMCIgZmlsbD0iIzM3NDE1MSIgdGV4dC1hbmNob3I9InN0YXJ0Ij5HZXQgU3RhcnRlZCDigJMgUXVhcnRvPC90ZXh0Pjx0ZXh0IHg9IjE3NCIgeT0iMjYiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksLWFwcGxlLXN5c3RlbSxzYW5zLXNlcmlmIiBmb250LXNpemU9IjkiIGZvbnQtd2VpZ2h0PSI0MDAiIGZpbGw9IiM5Y2EzYWYiIHRleHQtYW5jaG9yPSJzdGFydCI+4pyVPC90ZXh0Pjx0ZXh0IHg9IjE5MyIgeT0iMjciIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksLWFwcGxlLXN5c3RlbSxzYW5zLXNlcmlmIiBmb250LXNpemU9IjE1IiBmb250LXdlaWdodD0iNDAwIiBmaWxsPSIjOWNhM2FmIiB0ZXh0LWFuY2hvcj0ic3RhcnQiPis8L3RleHQ+PHRleHQgeD0iNjQwIiB5PSIyMSIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTIiIGZvbnQtd2VpZ2h0PSI0MDAiIGZpbGw9IiM3NzciIHRleHQtYW5jaG9yPSJzdGFydCI+4pSAPC90ZXh0PjxyZWN0IHg9IjY1OCIgeT0iOSIgd2lkdGg9IjE0IiBoZWlnaHQ9IjExIiByeD0iMiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNzc3IiBzdHJva2Utd2lkdGg9IjEuMiIvPjx0ZXh0IHg9IjY4NiIgeT0iMjIiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksLWFwcGxlLXN5c3RlbSxzYW5zLXNlcmlmIiBmb250LXNpemU9IjEzIiBmb250LXdlaWdodD0iNDAwIiBmaWxsPSIjNzc3IiB0ZXh0LWFuY2hvcj0ic3RhcnQiPuKclTwvdGV4dD48cmVjdCB4PSIwIiB5PSIzNiIgd2lkdGg9IjcyMCIgaGVpZ2h0PSI0MCIgcng9IjAiIGZpbGw9IiNmMWYzZjQiLz48dGV4dCB4PSIxMCIgeT0iNjIiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksLWFwcGxlLXN5c3RlbSxzYW5zLXNlcmlmIiBmb250LXNpemU9IjE2IiBmb250LXdlaWdodD0iNDAwIiBmaWxsPSIjYWFhIiB0ZXh0LWFuY2hvcj0ic3RhcnQiPuKGkDwvdGV4dD48dGV4dCB4PSIzMCIgeT0iNjIiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksLWFwcGxlLXN5c3RlbSxzYW5zLXNlcmlmIiBmb250LXNpemU9IjE2IiBmb250LXdlaWdodD0iNDAwIiBmaWxsPSIjZDBkMGQwIiB0ZXh0LWFuY2hvcj0ic3RhcnQiPuKGkjwvdGV4dD48dGV4dCB4PSI1MCIgeT0iNjAiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksLWFwcGxlLXN5c3RlbSxzYW5zLXNlcmlmIiBmb250LXNpemU9IjEzIiBmb250LXdlaWdodD0iNDAwIiBmaWxsPSIjNzc3IiB0ZXh0LWFuY2hvcj0ic3RhcnQiPuKGuzwvdGV4dD48cmVjdCB4PSI2NiIgeT0iNDQiIHdpZHRoPSI2MTgiIGhlaWdodD0iMjIiIHJ4PSIxMSIgZmlsbD0id2hpdGUiIHN0cm9rZT0iI2UwZTBlMCIgc3Ryb2tlLXdpZHRoPSIxLjUiLz48dGV4dCB4PSI4MCIgeT0iNjAiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksLWFwcGxlLXN5c3RlbSxzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIiBmb250LXdlaWdodD0iNDAwIiBmaWxsPSIjMzc0MTUxIiB0ZXh0LWFuY2hvcj0ic3RhcnQiPnF1YXJ0by5vcmcvZG9jcy9nZXQtc3RhcnRlZC88L3RleHQ+PHRleHQgeD0iNjkwIiB5PSI2MCIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTUiIGZvbnQtd2VpZ2h0PSI0MDAiIGZpbGw9IiM5Y2EzYWYiIHRleHQtYW5jaG9yPSJzdGFydCI+4ouuPC90ZXh0PjxsaW5lIHgxPSIwIiB5MT0iNzUiIHgyPSI3MjAiIHkyPSI3NSIgc3Ryb2tlPSIjZTVlN2ViIiBzdHJva2Utd2lkdGg9IjEiLz48cmVjdCB4PSIwIiB5PSI3NiIgd2lkdGg9IjcyMCIgaGVpZ2h0PSIzODQiIHJ4PSIwIiBmaWxsPSJ3aGl0ZSIvPjxyZWN0IHg9IjAiIHk9Ijc2IiB3aWR0aD0iNzIwIiBoZWlnaHQ9IjU2IiByeD0iMCIgZmlsbD0iIzJkNGE3YSIvPjx0ZXh0IHg9IjE4IiB5PSI5OCIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMjAiIGZvbnQtd2VpZ2h0PSI3MDAiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ic3RhcnQiPlF1YXJ0bzwvdGV4dD48dGV4dCB4PSIxOCIgeT0iMTE4IiBmb250LWZhbWlseT0ic3lzdGVtLXVpLC1hcHBsZS1zeXN0ZW0sc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSIgZm9udC13ZWlnaHQ9IjQwMCIgZmlsbD0iIzkzYzVmZCIgdGV4dC1hbmNob3I9InN0YXJ0Ij5BbiBvcGVuLXNvdXJjZSBzY2llbnRpZmljIGFuZCB0ZWNobmljYWwgcHVibGlzaGluZyBzeXN0ZW08L3RleHQ+PHRleHQgeD0iNDQwIiB5PSIxMDgiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksLWFwcGxlLXN5c3RlbSxzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIiBmb250LXdlaWdodD0iNDAwIiBmaWxsPSIjZTJlOGYwIiB0ZXh0LWFuY2hvcj0ic3RhcnQiPkdldCBTdGFydGVkPC90ZXh0Pjx0ZXh0IHg9IjU0MCIgeT0iMTA4IiBmb250LWZhbWlseT0ic3lzdGVtLXVpLC1hcHBsZS1zeXN0ZW0sc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSIgZm9udC13ZWlnaHQ9IjQwMCIgZmlsbD0iI2UyZThmMCIgdGV4dC1hbmNob3I9InN0YXJ0Ij5HdWlkZTwvdGV4dD48dGV4dCB4PSI2MDAiIHk9IjEwOCIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiIGZvbnQtd2VpZ2h0PSI0MDAiIGZpbGw9IiNlMmU4ZjAiIHRleHQtYW5jaG9yPSJzdGFydCI+UmVmZXJlbmNlPC90ZXh0Pjx0ZXh0IHg9IjM2MCIgeT0iMTY2IiBmb250LWZhbWlseT0ic3lzdGVtLXVpLC1hcHBsZS1zeXN0ZW0sc2Fucy1zZXJpZiIgZm9udC1zaXplPSIyMiIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iIzFlM2E1ZiIgdGV4dC1hbmNob3I9Im1pZGRsZSI+R2V0IFN0YXJ0ZWQgd2l0aCBRdWFydG88L3RleHQ+PHRleHQgeD0iMzYwIiB5PSIxODkiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksLWFwcGxlLXN5c3RlbSxzYW5zLXNlcmlmIiBmb250LXNpemU9IjEyIiBmb250LXdlaWdodD0iNDAwIiBmaWxsPSIjNGI1NTYzIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5JbnN0YWxsIFF1YXJ0byBhbmQgc3RhcnQgcHVibGlzaGluZyBkb2N1bWVudHMsIHByZXNlbnRhdGlvbnMsIGFuZCB3ZWJzaXRlcy48L3RleHQ+PHJlY3QgeD0iNjAiIHk9IjIwNCIgd2lkdGg9IjYwMCIgaGVpZ2h0PSI5MCIgcng9IjgiIGZpbGw9IiNmMGY3ZmYiIHN0cm9rZT0iI2JmZGJmZSIgc3Ryb2tlLXdpZHRoPSIxLjUiLz48dGV4dCB4PSI4NCIgeT0iMjI4IiBmb250LWZhbWlseT0ic3lzdGVtLXVpLC1hcHBsZS1zeXN0ZW0sc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNCIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iIzFlM2E1ZiIgdGV4dC1hbmNob3I9InN0YXJ0Ij5TdGVwIDEg4oCUIEluc3RhbGwgUXVhcnRvPC90ZXh0Pjx0ZXh0IHg9Ijg0IiB5PSIyNDgiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksLWFwcGxlLXN5c3RlbSxzYW5zLXNlcmlmIiBmb250LXNpemU9IjEyIiBmb250LXdlaWdodD0iNDAwIiBmaWxsPSIjMzc0MTUxIiB0ZXh0LWFuY2hvcj0ic3RhcnQiPkRvd25sb2FkIGFuZCBydW4gdGhlIGluc3RhbGxlciBmb3IgV2luZG93czo8L3RleHQ+PHJlY3QgeD0iODQiIHk9IjI2MiIgd2lkdGg9IjE3MCIgaGVpZ2h0PSIzMCIgcng9IjYiIGZpbGw9IiMyZDRhN2EiLz48dGV4dCB4PSIxNjkiIHk9IjI4MSIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTIiIGZvbnQtd2VpZ2h0PSI2MDAiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj7ihpMgIFdpbmRvd3MgKC5tc2kpPC90ZXh0Pjx0ZXh0IHg9IjI3MCIgeT0iMjgwIiBmb250LWZhbWlseT0ic3lzdGVtLXVpLC1hcHBsZS1zeXN0ZW0sc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMiIgZm9udC13ZWlnaHQ9IjQwMCIgZmlsbD0iIzJkNGE3YSIgdGV4dC1hbmNob3I9InN0YXJ0Ij5tYWNPUzwvdGV4dD48dGV4dCB4PSIzMjAiIHk9IjI4MCIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTIiIGZvbnQtd2VpZ2h0PSI0MDAiIGZpbGw9IiM5Y2EzYWYiIHRleHQtYW5jaG9yPSJzdGFydCI+fDwvdGV4dD48dGV4dCB4PSIzMzIiIHk9IjI4MCIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTIiIGZvbnQtd2VpZ2h0PSI0MDAiIGZpbGw9IiMyZDRhN2EiIHRleHQtYW5jaG9yPSJzdGFydCI+TGludXg8L3RleHQ+PHJlY3QgeD0iNjAiIHk9IjMxMCIgd2lkdGg9IjYwMCIgaGVpZ2h0PSI4MCIgcng9IjgiIGZpbGw9IiNmOWZhZmIiIHN0cm9rZT0iI2U1ZTdlYiIgc3Ryb2tlLXdpZHRoPSIxLjUiLz48dGV4dCB4PSI4NCIgeT0iMzMzIiBmb250LWZhbWlseT0ic3lzdGVtLXVpLC1hcHBsZS1zeXN0ZW0sc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNCIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iIzFlM2E1ZiIgdGV4dC1hbmNob3I9InN0YXJ0Ij5TdGVwIDIg4oCUIEluc3RhbGwgdGhlIFZTIENvZGUgRXh0ZW5zaW9uPC90ZXh0Pjx0ZXh0IHg9Ijg0IiB5PSIzNTIiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksLWFwcGxlLXN5c3RlbSxzYW5zLXNlcmlmIiBmb250LXNpemU9IjEyIiBmb250LXdlaWdodD0iNDAwIiBmaWxsPSIjMzc0MTUxIiB0ZXh0LWFuY2hvcj0ic3RhcnQiPk9wZW4gVlMgQ29kZSBFeHRlbnNpb25zIChDdHJsK1NoaWZ0K1gpIGFuZCBzZWFyY2ggZm9yIFF1YXJ0by48L3RleHQ+PHRleHQgeD0iODQiIHk9IjM3MSIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTIiIGZvbnQtd2VpZ2h0PSI0MDAiIGZpbGw9IiMzNzQxNTEiIHRleHQtYW5jaG9yPSJzdGFydCI+Q2xpY2sgSW5zdGFsbCBvbiB0aGUgUXVhcnRvIGV4dGVuc2lvbiBieSBxdWFydG8ub3JnLjwvdGV4dD48L3N2Zz4=" alt="Quarto download page" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'" />
+        <div style="display:none; align-items:center; justify-content:center; height:160px; background:#f8fafc; color:#94a3b8; font-size:.85rem; gap:.5rem;">
+          📸 Screenshot will appear here
+        </div>
+      </div>
+
+      <h3 style="font-size:1rem; font-weight:600; margin:1rem 0 .4rem;">Install the Quarto extension in VS Code</h3>
+      <p>This adds Quarto support directly inside VS Code so you can preview your webpage as you write it.</p>
+      <ol>
+        <li>Open VS Code</li>
+        <li>Click the <strong>Extensions</strong> icon in the left sidebar (it looks like four squares, with one square detached)</li>
+        <li>In the search box that appears, type <code>Quarto</code></li>
+        <li>Click the first result (by <em>quarto.quarto</em>) and click <strong>Install</strong></li>
+      </ol>
+
+      <div class="screenshot-wrap">
+        <div class="screenshot-label">📸 Screenshot — Installing the Quarto VS Code extension</div>
+        <img src="data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgODIwIDUyMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iODIwIiBoZWlnaHQ9IjUyMCIgcng9IjgiIGZpbGw9IiMxZTFlMWUiLz48cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iODIwIiBoZWlnaHQ9IjMwIiByeD0iOCIgZmlsbD0iIzNjM2MzYyIvPjxyZWN0IHg9IjAiIHk9IjE1IiB3aWR0aD0iODIwIiBoZWlnaHQ9IjE1IiBmaWxsPSIjM2MzYzNjIi8+PHRleHQgeD0iNDEwIiB5PSIyMCIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTIiIGZvbnQtd2VpZ2h0PSI0MDAiIGZpbGw9IiNjY2NjY2MiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkV4dGVuc2lvbnMgLSBWaXN1YWwgU3R1ZGlvIENvZGU8L3RleHQ+PHRleHQgeD0iNzg2IiB5PSIyMCIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTMiIGZvbnQtd2VpZ2h0PSI0MDAiIGZpbGw9IiM4ODgiIHRleHQtYW5jaG9yPSJzdGFydCI+4pyVPC90ZXh0PjxyZWN0IHg9IjAiIHk9IjMwIiB3aWR0aD0iODIwIiBoZWlnaHQ9IjI4IiByeD0iMCIgZmlsbD0iIzNjM2MzYyIvPjx0ZXh0IHg9IjEwIiB5PSI0OCIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiIGZvbnQtd2VpZ2h0PSI0MDAiIGZpbGw9IiNjY2NjY2MiIHRleHQtYW5jaG9yPSJzdGFydCI+RmlsZTwvdGV4dD48dGV4dCB4PSI3NiIgeT0iNDgiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksLWFwcGxlLXN5c3RlbSxzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIiBmb250LXdlaWdodD0iNDAwIiBmaWxsPSIjY2NjY2NjIiB0ZXh0LWFuY2hvcj0ic3RhcnQiPkVkaXQ8L3RleHQ+PHRleHQgeD0iMTQyIiB5PSI0OCIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiIGZvbnQtd2VpZ2h0PSI0MDAiIGZpbGw9IiNjY2NjY2MiIHRleHQtYW5jaG9yPSJzdGFydCI+U2VsZWN0aW9uPC90ZXh0Pjx0ZXh0IHg9IjIwOCIgeT0iNDgiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksLWFwcGxlLXN5c3RlbSxzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIiBmb250LXdlaWdodD0iNDAwIiBmaWxsPSIjY2NjY2NjIiB0ZXh0LWFuY2hvcj0ic3RhcnQiPlZpZXc8L3RleHQ+PHRleHQgeD0iMjc0IiB5PSI0OCIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiIGZvbnQtd2VpZ2h0PSI0MDAiIGZpbGw9IiNjY2NjY2MiIHRleHQtYW5jaG9yPSJzdGFydCI+VGVybWluYWw8L3RleHQ+PHRleHQgeD0iMzQwIiB5PSI0OCIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiIGZvbnQtd2VpZ2h0PSI0MDAiIGZpbGw9IiNjY2NjY2MiIHRleHQtYW5jaG9yPSJzdGFydCI+SGVscDwvdGV4dD48cmVjdCB4PSIwIiB5PSI1OCIgd2lkdGg9IjQ4IiBoZWlnaHQ9IjQ2MiIgcng9IjAiIGZpbGw9IiMzMzMzMzMiLz48dGV4dCB4PSIyNCIgeT0iODYiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksLWFwcGxlLXN5c3RlbSxzYW5zLXNlcmlmIiBmb250LXNpemU9IjE2IiBmb250LXdlaWdodD0iNDAwIiBmaWxsPSIjNzc3IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj7ijos8L3RleHQ+PHRleHQgeD0iMjQiIHk9IjEyNiIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTYiIGZvbnQtd2VpZ2h0PSI0MDAiIGZpbGw9IiM3NzciIHRleHQtYW5jaG9yPSJtaWRkbGUiPvCflI08L3RleHQ+PHRleHQgeD0iMjQiIHk9IjE2NiIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTYiIGZvbnQtd2VpZ2h0PSI0MDAiIGZpbGw9IiM3NzciIHRleHQtYW5jaG9yPSJtaWRkbGUiPuKRgjwvdGV4dD48dGV4dCB4PSIyNCIgeT0iMjA2IiBmb250LWZhbWlseT0ic3lzdGVtLXVpLC1hcHBsZS1zeXN0ZW0sc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNiIgZm9udC13ZWlnaHQ9IjQwMCIgZmlsbD0iIzc3NyIgdGV4dC1hbmNob3I9Im1pZGRsZSI+8J+QmzwvdGV4dD48dGV4dCB4PSIyNCIgeT0iMjQ2IiBmb250LWZhbWlseT0ic3lzdGVtLXVpLC1hcHBsZS1zeXN0ZW0sc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNiIgZm9udC13ZWlnaHQ9IjQwMCIgZmlsbD0iI2NjY2NjYyIgdGV4dC1hbmNob3I9Im1pZGRsZSI+4oqePC90ZXh0PjxyZWN0IHg9IjAiIHk9IjIxOCIgd2lkdGg9IjMiIGhlaWdodD0iNDAiIGZpbGw9IiMwMDdhY2MiLz48cmVjdCB4PSI0OCIgeT0iNTgiIHdpZHRoPSIyMzAiIGhlaWdodD0iNDYyIiByeD0iMCIgZmlsbD0iIzI1MjUyNiIvPjx0ZXh0IHg9IjYwIiB5PSI4MiIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTAiIGZvbnQtd2VpZ2h0PSI2MDAiIGZpbGw9IiNiYmIiIHRleHQtYW5jaG9yPSJzdGFydCI+RVhURU5TSU9OUzwvdGV4dD48cmVjdCB4PSI1NiIgeT0iODgiIHdpZHRoPSIyMTQiIGhlaWdodD0iMjgiIHJ4PSI0IiBmaWxsPSIjM2MzYzNjIiBzdHJva2U9IiM1NTUiIHN0cm9rZS13aWR0aD0iMSIvPjx0ZXh0IHg9IjYyIiB5PSIxMDYiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksLWFwcGxlLXN5c3RlbSxzYW5zLXNlcmlmIiBmb250LXNpemU9IjEyIiBmb250LXdlaWdodD0iNDAwIiBmaWxsPSIjY2NjIiB0ZXh0LWFuY2hvcj0ic3RhcnQiPlF1YXJ0bzwvdGV4dD48cmVjdCB4PSI0OCIgeT0iMTIwIiB3aWR0aD0iMjMwIiBoZWlnaHQ9IjgwIiByeD0iMCIgZmlsbD0iIzA5NDc3MSIvPjxyZWN0IHg9IjU2IiB5PSIxMjYiIHdpZHRoPSI0OCIgaGVpZ2h0PSI0OCIgcng9IjYiIGZpbGw9IiMyZDRhN2EiLz48dGV4dCB4PSI4MCIgeT0iMTU2IiBmb250LWZhbWlseT0ic3lzdGVtLXVpLC1hcHBsZS1zeXN0ZW0sc2Fucy1zZXJpZiIgZm9udC1zaXplPSIyMiIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiPlE8L3RleHQ+PHRleHQgeD0iMTEyIiB5PSIxNDAiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksLWFwcGxlLXN5c3RlbSxzYW5zLXNlcmlmIiBmb250LXNpemU9IjEzIiBmb250LXdlaWdodD0iNjAwIiBmaWxsPSIjY2NjIiB0ZXh0LWFuY2hvcj0ic3RhcnQiPlF1YXJ0bzwvdGV4dD48dGV4dCB4PSIxMTIiIHk9IjE1NSIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTAiIGZvbnQtd2VpZ2h0PSI0MDAiIGZpbGw9IiM5Y2RjZmUiIHRleHQtYW5jaG9yPSJzdGFydCI+cXVhcnRvLm9yZzwvdGV4dD48dGV4dCB4PSIxMTIiIHk9IjE2OSIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTAiIGZvbnQtd2VpZ2h0PSI0MDAiIGZpbGw9IiM5Y2EzYWYiIHRleHQtYW5jaG9yPSJzdGFydCI+MS4yMS4wPC90ZXh0PjxyZWN0IHg9IjExMiIgeT0iMTc2IiB3aWR0aD0iMTU4IiBoZWlnaHQ9IjIwIiByeD0iMyIgZmlsbD0iIzAwNzhkNCIvPjx0ZXh0IHg9IjE5MSIgeT0iMTkwIiBmb250LWZhbWlseT0ic3lzdGVtLXVpLC1hcHBsZS1zeXN0ZW0sc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSIgZm9udC13ZWlnaHQ9IjYwMCIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkluc3RhbGw8L3RleHQ+PHJlY3QgeD0iNDgiIHk9IjIwMCIgd2lkdGg9IjIzMCIgaGVpZ2h0PSI2NCIgcng9IjAiIGZpbGw9IiMyNTI1MjYiLz48cmVjdCB4PSI1NiIgeT0iMjA2IiB3aWR0aD0iNDgiIGhlaWdodD0iNDgiIHJ4PSI2IiBmaWxsPSIjM2MzYzNjIi8+PHRleHQgeD0iODAiIHk9IjIzNiIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTYiIGZvbnQtd2VpZ2h0PSI0MDAiIGZpbGw9IiM3NzciIHRleHQtYW5jaG9yPSJtaWRkbGUiPlErPC90ZXh0Pjx0ZXh0IHg9IjExMiIgeT0iMjIwIiBmb250LWZhbWlseT0ic3lzdGVtLXVpLC1hcHBsZS1zeXN0ZW0sc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMiIgZm9udC13ZWlnaHQ9IjQwMCIgZmlsbD0iIzg1ODU4NSIgdGV4dC1hbmNob3I9InN0YXJ0Ij5RdWFydG8gQXNzaXN0YW50PC90ZXh0Pjx0ZXh0IHg9IjExMiIgeT0iMjM1IiBmb250LWZhbWlseT0ic3lzdGVtLXVpLC1hcHBsZS1zeXN0ZW0sc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMCIgZm9udC13ZWlnaHQ9IjQwMCIgZmlsbD0iIzZiNzI4MCIgdGV4dC1hbmNob3I9InN0YXJ0Ij5Db21tdW5pdHkgwrcgMC4yLjA8L3RleHQ+PGxpbmUgeDE9IjQ4IiB5MT0iMjY0IiB4Mj0iMjc4IiB5Mj0iMjY0IiBzdHJva2U9IiMzMzMiIHN0cm9rZS13aWR0aD0iMSIvPjxyZWN0IHg9IjI3OCIgeT0iNTgiIHdpZHRoPSI1NDIiIGhlaWdodD0iNDYyIiByeD0iMCIgZmlsbD0iIzFlMWUxZSIvPjxyZWN0IHg9IjI3OCIgeT0iNTgiIHdpZHRoPSIxMjAiIGhlaWdodD0iMzUiIHJ4PSIwIiBmaWxsPSIjMWUxZTFlIi8+PHJlY3QgeD0iMjc4IiB5PSI5MyIgd2lkdGg9IjU0MiIgaGVpZ2h0PSIxIiByeD0iMCIgZmlsbD0iIzMzMyIvPjxsaW5lIHgxPSIyNzgiIHkxPSI1OCIgeDI9IjM5OCIgeTI9IjU4IiBzdHJva2U9IiMwMDdhY2MiIHN0cm9rZS13aWR0aD0iMiIvPjx0ZXh0IHg9IjI4OCIgeT0iODAiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksLWFwcGxlLXN5c3RlbSxzYW5zLXNlcmlmIiBmb250LXNpemU9IjEyIiBmb250LXdlaWdodD0iNDAwIiBmaWxsPSIjY2NjIiB0ZXh0LWFuY2hvcj0ic3RhcnQiPlF1YXJ0bzwvdGV4dD48cmVjdCB4PSIyOTAiIHk9IjEwOCIgd2lkdGg9IjYwIiBoZWlnaHQ9IjYwIiByeD0iOCIgZmlsbD0iIzJkNGE3YSIvPjx0ZXh0IHg9IjMyMCIgeT0iMTQ1IiBmb250LWZhbWlseT0ic3lzdGVtLXVpLC1hcHBsZS1zeXN0ZW0sc2Fucy1zZXJpZiIgZm9udC1zaXplPSIyOCIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiPlE8L3RleHQ+PHRleHQgeD0iMzYyIiB5PSIxMjgiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksLWFwcGxlLXN5c3RlbSxzYW5zLXNlcmlmIiBmb250LXNpemU9IjE4IiBmb250LXdlaWdodD0iNjAwIiBmaWxsPSIjY2NjIiB0ZXh0LWFuY2hvcj0ic3RhcnQiPlF1YXJ0bzwvdGV4dD48dGV4dCB4PSIzNjIiIHk9IjE0OCIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTIiIGZvbnQtd2VpZ2h0PSI0MDAiIGZpbGw9IiM5Y2RjZmUiIHRleHQtYW5jaG9yPSJzdGFydCI+cXVhcnRvLm9yZyDCtyAxLjIxLjA8L3RleHQ+PHJlY3QgeD0iMzYyIiB5PSIxNTgiIHdpZHRoPSIxMDAiIGhlaWdodD0iMjYiIHJ4PSI0IiBmaWxsPSIjMDA3OGQ0Ii8+PHRleHQgeD0iNDEyIiB5PSIxNzUiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksLWFwcGxlLXN5c3RlbSxzYW5zLXNlcmlmIiBmb250LXNpemU9IjEyIiBmb250LXdlaWdodD0iNjAwIiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+SW5zdGFsbDwvdGV4dD48bGluZSB4MT0iMjkwIiB5MT0iMTk4IiB4Mj0iODA4IiB5Mj0iMTk4IiBzdHJva2U9IiNlNWU3ZWIiIHN0cm9rZS13aWR0aD0iMSIvPjx0ZXh0IHg9IjI5MCIgeT0iMjE2IiBmb250LWZhbWlseT0ic3lzdGVtLXVpLC1hcHBsZS1zeXN0ZW0sc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMiIgZm9udC13ZWlnaHQ9IjQwMCIgZmlsbD0iIzljYTNhZiIgdGV4dC1hbmNob3I9InN0YXJ0Ij5RdWFydG8gbWFrZXMgaXQgZWFzeSB0byBjcmVhdGUgd2Vic2l0ZXMsIGJvb2tzLCBkb2N1bWVudHMsIGFuZCBwcmVzZW50YXRpb25zLjwvdGV4dD48dGV4dCB4PSIyOTAiIHk9IjIzNiIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTIiIGZvbnQtd2VpZ2h0PSI0MDAiIGZpbGw9IiM5Y2EzYWYiIHRleHQtYW5jaG9yPSJzdGFydCI+SXQgc3VwcG9ydHMgUiwgUHl0aG9uLCBKdWxpYSwgYW5kIE9ic2VydmFibGUuIFdvcmtzIGJlYXV0aWZ1bGx5IHdpdGggVlMgQ29kZS48L3RleHQ+PC9zdmc+" alt="VS Code Extensions panel showing the Quarto extension" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'" />
+        <div style="display:none; align-items:center; justify-content:center; height:160px; background:#f8fafc; color:#94a3b8; font-size:.85rem; gap:.5rem;">
+          📸 Screenshot will appear here
+        </div>
+      </div>
+
+      <div class="tip">
+        <strong>✅ You're done when:</strong> Quarto appears in the list of installed extensions in VS Code with a blue checkmark.
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════
+       STEP 5: Create a GitHub Repository
+  ═══════════════════════════════════════ -->
+  <section id="step5" style="margin-top:1.5rem;">
+    <div class="step">
+      <div class="step-header">
+        <div class="step-num">5</div>
+        <h2>Create a Remote Repository on GitHub
+          <span class="subtitle">A "remote" repo lives on GitHub's servers — it's your webpage's permanent home online</span>
+        </h2>
+      </div>
+
+      <div class="concept">
+        <strong>📦 What is a Repository?</strong> A <em>repository</em> (or "repo" for short) is like a folder that holds all the files for one project. There are two kinds: a <strong>local</strong> repo lives on your own computer (only you can see it), and a <strong>remote</strong> repo lives on GitHub's servers (visible to anyone you choose). In this step you'll create a remote repo on GitHub — this is where your files will live on the internet and where your website gets published from.
+      </div>
+
+      <!-- Local vs Remote diagram -->
+      <div class="diagram">
+        <figure>
+          <svg viewBox="0 0 620 160" xmlns="http://www.w3.org/2000/svg" style="max-width:600px; width:100%;">
+            <defs>
+              <marker id="arr4" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+                <path d="M0,0 L0,6 L8,3 z" fill="#94a3b8"/>
+              </marker>
+            </defs>
+            <!-- Local -->
+            <rect x="10" y="20" width="230" height="120" rx="12" fill="#eff6ff" stroke="#93c5fd" stroke-width="1.5"/>
+            <text x="125" y="44" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" font-weight="700" fill="#1e40af">🖥️ LOCAL REPO</text>
+            <text x="125" y="62" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#3b82f6">Lives on YOUR computer</text>
+            <text x="125" y="80" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#374151">C:\Users\you\my-webpage\</text>
+            <text x="125" y="100" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#64748b">Only you can see it.</text>
+            <text x="125" y="116" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#64748b">You edit files here.</text>
+            <text x="125" y="132" text-anchor="middle" font-family="Inter,sans-serif" font-size="9" fill="#93c5fd">(Created in Step 6)</text>
+            <!-- Arrow -->
+            <line x1="244" y1="80" x2="366" y2="80" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arr4)"/>
+            <text x="305" y="70" text-anchor="middle" font-family="Inter,sans-serif" font-size="9" fill="#64748b">git push</text>
+            <text x="305" y="82" text-anchor="middle" font-family="Inter,sans-serif" font-size="9" fill="#64748b">(syncs files)</text>
+            <!-- Remote -->
+            <rect x="370" y="20" width="240" height="120" rx="12" fill="#f0fdf4" stroke="#86efac" stroke-width="1.5"/>
+            <text x="490" y="44" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" font-weight="700" fill="#14532d">🌐 REMOTE REPO</text>
+            <text x="490" y="62" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#16a34a">Lives on GitHub's servers</text>
+            <text x="490" y="80" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#374151">github.com/you/you.github.io</text>
+            <text x="490" y="100" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#64748b">Anyone can see it.</text>
+            <text x="490" y="116" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#64748b">Powers your live website.</text>
+            <text x="490" y="132" text-anchor="middle" font-family="Inter,sans-serif" font-size="9" fill="#86efac">(Created RIGHT NOW in Step 5 ✅)</text>
+          </svg>
+          <figcaption>You'll create the remote repo now (Step 5), then connect your local copy later (Step 6)</figcaption>
+        </figure>
+      </div>
+
+      <p>To make GitHub publish your repo as a website, you need to give it a very specific name: <code>yourusername.github.io</code>. GitHub recognises this special name and automatically serves it as a live website.</p>
+
+      <ol>
+        <li>Sign in to <a href="https://github.com" target="_blank">github.com</a></li>
+        <li>Click the <strong>+</strong> icon in the top-right corner and choose <strong>New repository</strong></li>
+        <li>In the <strong>"Repository name"</strong> field, type exactly: <code>yourusername.github.io</code><br>
+            (replace <code>yourusername</code> with your actual GitHub username, all lowercase)</li>
+        <li>Make sure <strong>Public</strong> is selected (so your website is visible to everyone)</li>
+        <li>Check the box that says <strong>"Add a README file"</strong></li>
+        <li>Click the green <strong>Create repository</strong> button</li>
+      </ol>
+
+      <div class="warn-box">
+        <strong>⚠️ The name must be exact!</strong> If your username is <code>jsmith</code>, the repo name must be <code>jsmith.github.io</code> (not <code>jsmith.GitHub.io</code>, not <code>jsmith.github.com</code>). GitHub is case-sensitive for this.
+      </div>
+
+      <div class="screenshot-wrap">
+        <div class="screenshot-label">📸 Screenshot — Creating a new GitHub repository</div>
+        <img src="data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgNzIwIDU0MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iNzIwIiBoZWlnaHQ9IjU0MCIgcng9IjEwIiBmaWxsPSIjMmQyZDJkIi8+PHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjcyMCIgaGVpZ2h0PSIzNiIgcng9IjEwIiBmaWxsPSIjZGVlMWU2Ii8+PHJlY3QgeD0iMCIgeT0iMTgiIHdpZHRoPSI3MjAiIGhlaWdodD0iMTgiIGZpbGw9IiNkZWUxZTYiLz48cmVjdCB4PSI1IiB5PSI1IiB3aWR0aD0iMTgwIiBoZWlnaHQ9IjMxIiByeD0iNSIgZmlsbD0id2hpdGUiLz48Y2lyY2xlIGN4PSIyMSIgY3k9IjIxIiByPSI2IiBmaWxsPSIjZGRlMWU3Ii8+PHRleHQgeD0iMzMiIHk9IjI2IiBmb250LWZhbWlseT0ic3lzdGVtLXVpLC1hcHBsZS1zeXN0ZW0sc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSIgZm9udC13ZWlnaHQ9IjQwMCIgZmlsbD0iIzM3NDE1MSIgdGV4dC1hbmNob3I9InN0YXJ0Ij5DcmVhdGUgYSBuZXcgcmVwb3NpdG9yeSDCtyA8L3RleHQ+PHRleHQgeD0iMTc0IiB5PSIyNiIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iOSIgZm9udC13ZWlnaHQ9IjQwMCIgZmlsbD0iIzljYTNhZiIgdGV4dC1hbmNob3I9InN0YXJ0Ij7inJU8L3RleHQ+PHRleHQgeD0iMTkzIiB5PSIyNyIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTUiIGZvbnQtd2VpZ2h0PSI0MDAiIGZpbGw9IiM5Y2EzYWYiIHRleHQtYW5jaG9yPSJzdGFydCI+KzwvdGV4dD48dGV4dCB4PSI2NDAiIHk9IjIxIiBmb250LWZhbWlseT0ic3lzdGVtLXVpLC1hcHBsZS1zeXN0ZW0sc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMiIgZm9udC13ZWlnaHQ9IjQwMCIgZmlsbD0iIzc3NyIgdGV4dC1hbmNob3I9InN0YXJ0Ij7ilIA8L3RleHQ+PHJlY3QgeD0iNjU4IiB5PSI5IiB3aWR0aD0iMTQiIGhlaWdodD0iMTEiIHJ4PSIyIiBmaWxsPSJub25lIiBzdHJva2U9IiM3NzciIHN0cm9rZS13aWR0aD0iMS4yIi8+PHRleHQgeD0iNjg2IiB5PSIyMiIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTMiIGZvbnQtd2VpZ2h0PSI0MDAiIGZpbGw9IiM3NzciIHRleHQtYW5jaG9yPSJzdGFydCI+4pyVPC90ZXh0PjxyZWN0IHg9IjAiIHk9IjM2IiB3aWR0aD0iNzIwIiBoZWlnaHQ9IjQwIiByeD0iMCIgZmlsbD0iI2YxZjNmNCIvPjx0ZXh0IHg9IjEwIiB5PSI2MiIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTYiIGZvbnQtd2VpZ2h0PSI0MDAiIGZpbGw9IiNhYWEiIHRleHQtYW5jaG9yPSJzdGFydCI+4oaQPC90ZXh0Pjx0ZXh0IHg9IjMwIiB5PSI2MiIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTYiIGZvbnQtd2VpZ2h0PSI0MDAiIGZpbGw9IiNkMGQwZDAiIHRleHQtYW5jaG9yPSJzdGFydCI+4oaSPC90ZXh0Pjx0ZXh0IHg9IjUwIiB5PSI2MCIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTMiIGZvbnQtd2VpZ2h0PSI0MDAiIGZpbGw9IiM3NzciIHRleHQtYW5jaG9yPSJzdGFydCI+4oa7PC90ZXh0PjxyZWN0IHg9IjY2IiB5PSI0NCIgd2lkdGg9IjYxOCIgaGVpZ2h0PSIyMiIgcng9IjExIiBmaWxsPSJ3aGl0ZSIgc3Ryb2tlPSIjZTBlMGUwIiBzdHJva2Utd2lkdGg9IjEuNSIvPjx0ZXh0IHg9IjgwIiB5PSI2MCIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiIGZvbnQtd2VpZ2h0PSI0MDAiIGZpbGw9IiMzNzQxNTEiIHRleHQtYW5jaG9yPSJzdGFydCI+Z2l0aHViLmNvbS9uZXc8L3RleHQ+PHRleHQgeD0iNjkwIiB5PSI2MCIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTUiIGZvbnQtd2VpZ2h0PSI0MDAiIGZpbGw9IiM5Y2EzYWYiIHRleHQtYW5jaG9yPSJzdGFydCI+4ouuPC90ZXh0PjxsaW5lIHgxPSIwIiB5MT0iNzUiIHgyPSI3MjAiIHkyPSI3NSIgc3Ryb2tlPSIjZTVlN2ViIiBzdHJva2Utd2lkdGg9IjEiLz48cmVjdCB4PSIwIiB5PSI3NiIgd2lkdGg9IjcyMCIgaGVpZ2h0PSI0NjQiIHJ4PSIwIiBmaWxsPSJ3aGl0ZSIvPjxyZWN0IHg9IjAiIHk9Ijc2IiB3aWR0aD0iNzIwIiBoZWlnaHQ9IjQ4IiByeD0iMCIgZmlsbD0iIzI0MjkyZiIvPjx0ZXh0IHg9IjE4IiB5PSIxMDciIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksLWFwcGxlLXN5c3RlbSxzYW5zLXNlcmlmIiBmb250LXNpemU9IjIwIiBmb250LXdlaWdodD0iNDAwIiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9InN0YXJ0Ij7irKE8L3RleHQ+PHRleHQgeD0iNDYiIHk9IjEwNyIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTMiIGZvbnQtd2VpZ2h0PSI2MDAiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ic3RhcnQiPndpbGxvbWk8L3RleHQ+PGNpcmNsZSBjeD0iNjk1IiBjeT0iMTAwIiByPSIxNCIgZmlsbD0iIzQ0NGQ1NiIvPjx0ZXh0IHg9IjY5NSIgeT0iMTA1IiBmb250LWZhbWlseT0ic3lzdGVtLXVpLC1hcHBsZS1zeXN0ZW0sc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMiIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiPlc8L3RleHQ+PHRleHQgeD0iMzYwIiB5PSIxNTIiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksLWFwcGxlLXN5c3RlbSxzYW5zLXNlcmlmIiBmb250LXNpemU9IjIwIiBmb250LXdlaWdodD0iNzAwIiBmaWxsPSIjMjQyOTJmIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5DcmVhdGUgYSBuZXcgcmVwb3NpdG9yeTwvdGV4dD48dGV4dCB4PSIzNjAiIHk9IjE3MiIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTIiIGZvbnQtd2VpZ2h0PSI0MDAiIGZpbGw9IiM2NTZkNzYiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkEgcmVwb3NpdG9yeSBjb250YWlucyBhbGwgcHJvamVjdCBmaWxlcywgaW5jbHVkaW5nIHRoZSByZXZpc2lvbiBoaXN0b3J5LjwvdGV4dD48bGluZSB4MT0iNjAiIHkxPSIxODQiIHgyPSI2NjAiIHkyPSIxODQiIHN0cm9rZT0iI2U1ZTdlYiIgc3Ryb2tlLXdpZHRoPSIxIi8+PHRleHQgeD0iNjAiIHk9IjIwMCIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTIiIGZvbnQtd2VpZ2h0PSI2MDAiIGZpbGw9IiMyNDI5MmYiIHRleHQtYW5jaG9yPSJzdGFydCI+T3duZXIgKjwvdGV4dD48dGV4dCB4PSIyNjUiIHk9IjIwMCIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTIiIGZvbnQtd2VpZ2h0PSI2MDAiIGZpbGw9IiMyNDI5MmYiIHRleHQtYW5jaG9yPSJzdGFydCI+UmVwb3NpdG9yeSBuYW1lICo8L3RleHQ+PHJlY3QgeD0iNjAiIHk9IjIwOCIgd2lkdGg9IjE4NSIgaGVpZ2h0PSIzMiIgcng9IjYiIGZpbGw9IndoaXRlIiBzdHJva2U9IiNkMGQ3ZGUiIHN0cm9rZS13aWR0aD0iMS41Ii8+PHRleHQgeD0iNzAiIHk9IjIyOCIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTIiIGZvbnQtd2VpZ2h0PSI0MDAiIGZpbGw9IiMyNDI5MmYiIHRleHQtYW5jaG9yPSJzdGFydCI+d2lsbG9taTwvdGV4dD48dGV4dCB4PSIyNTIiIHk9IjIyOCIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTgiIGZvbnQtd2VpZ2h0PSI0MDAiIGZpbGw9IiM5Y2EzYWYiIHRleHQtYW5jaG9yPSJzdGFydCI+LzwvdGV4dD48cmVjdCB4PSIyNjUiIHk9IjIwOCIgd2lkdGg9IjM5MCIgaGVpZ2h0PSIzMiIgcng9IjYiIGZpbGw9IiNmZmY4YzUiIHN0cm9rZT0iI2UwYjgwMCIgc3Ryb2tlLXdpZHRoPSIxLjUiLz48dGV4dCB4PSIyNzciIHk9IjIyOCIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTMiIGZvbnQtd2VpZ2h0PSI0MDAiIGZpbGw9IiMyNDI5MmYiIHRleHQtYW5jaG9yPSJzdGFydCI+d2lsbG9taS5naXRodWIuaW88L3RleHQ+PHRleHQgeD0iNjAiIHk9IjI1MiIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiIGZvbnQtd2VpZ2h0PSI2MDAiIGZpbGw9IiMxYTdmMzciIHRleHQtYW5jaG9yPSJzdGFydCI+4pyTICB3aWxsb21pLmdpdGh1Yi5pbyBpcyBhdmFpbGFibGUuPC90ZXh0Pjx0ZXh0IHg9IjYwIiB5PSIyNzciIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksLWFwcGxlLXN5c3RlbSxzYW5zLXNlcmlmIiBmb250LXNpemU9IjEyIiBmb250LXdlaWdodD0iNjAwIiBmaWxsPSIjMjQyOTJmIiB0ZXh0LWFuY2hvcj0ic3RhcnQiPkRlc2NyaXB0aW9uICAob3B0aW9uYWwpPC90ZXh0PjxyZWN0IHg9IjYwIiB5PSIyODYiIHdpZHRoPSI2MDAiIGhlaWdodD0iMzIiIHJ4PSI2IiBmaWxsPSJ3aGl0ZSIgc3Ryb2tlPSIjZDBkN2RlIiBzdHJva2Utd2lkdGg9IjEuNSIvPjx0ZXh0IHg9IjcwIiB5PSIzMDYiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksLWFwcGxlLXN5c3RlbSxzYW5zLXNlcmlmIiBmb250LXNpemU9IjEyIiBmb250LXdlaWdodD0iNDAwIiBmaWxsPSIjOWNhM2FmIiB0ZXh0LWFuY2hvcj0ic3RhcnQiPjwvdGV4dD48bGluZSB4MT0iNjAiIHkxPSIzMzIiIHgyPSI2NjAiIHkyPSIzMzIiIHN0cm9rZT0iI2U1ZTdlYiIgc3Ryb2tlLXdpZHRoPSIxIi8+PHJlY3QgeD0iNjAiIHk9IjM0NCIgd2lkdGg9IjYwMCIgaGVpZ2h0PSI0OCIgcng9IjYiIGZpbGw9IndoaXRlIiBzdHJva2U9IiMwOTY5ZGEiIHN0cm9rZS13aWR0aD0iMiIvPjxjaXJjbGUgY3g9IjgyIiBjeT0iMzY0IiByPSI4IiBmaWxsPSIjMDk2OWRhIi8+PGNpcmNsZSBjeD0iODIiIGN5PSIzNjQiIHI9IjMiIGZpbGw9IndoaXRlIi8+PHRleHQgeD0iMTAwIiB5PSIzNjgiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksLWFwcGxlLXN5c3RlbSxzYW5zLXNlcmlmIiBmb250LXNpemU9IjEzIiBmb250LXdlaWdodD0iNzAwIiBmaWxsPSIjMjQyOTJmIiB0ZXh0LWFuY2hvcj0ic3RhcnQiPlB1YmxpYzwvdGV4dD48dGV4dCB4PSIxMDAiIHk9IjM4NCIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiIGZvbnQtd2VpZ2h0PSI0MDAiIGZpbGw9IiM2NTZkNzYiIHRleHQtYW5jaG9yPSJzdGFydCI+QW55b25lIG9uIHRoZSBpbnRlcm5ldCBjYW4gc2VlIHRoaXMgcmVwb3NpdG9yeS48L3RleHQ+PHJlY3QgeD0iNjAiIHk9IjQwMCIgd2lkdGg9IjYwMCIgaGVpZ2h0PSI0MCIgcng9IjYiIGZpbGw9IndoaXRlIi8+PGNpcmNsZSBjeD0iODIiIGN5PSI0MTgiIHI9IjgiIGZpbGw9IndoaXRlIiBzdHJva2U9IiNkMGQ3ZGUiIHN0cm9rZS13aWR0aD0iMS41Ii8+PHRleHQgeD0iMTAwIiB5PSI0MjMiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksLWFwcGxlLXN5c3RlbSxzYW5zLXNlcmlmIiBmb250LXNpemU9IjEyIiBmb250LXdlaWdodD0iNDAwIiBmaWxsPSIjMjQyOTJmIiB0ZXh0LWFuY2hvcj0ic3RhcnQiPlByaXZhdGUg4oCUIE9ubHkgeW91IGNhbiBzZWUgdGhpcyByZXBvc2l0b3J5PC90ZXh0PjxsaW5lIHgxPSI2MCIgeTE9IjQ1MCIgeDI9IjY2MCIgeTI9IjQ1MCIgc3Ryb2tlPSIjZTVlN2ViIiBzdHJva2Utd2lkdGg9IjEiLz48dGV4dCB4PSI2MCIgeT0iNDY2IiBmb250LWZhbWlseT0ic3lzdGVtLXVpLC1hcHBsZS1zeXN0ZW0sc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMiIgZm9udC13ZWlnaHQ9IjYwMCIgZmlsbD0iIzI0MjkyZiIgdGV4dC1hbmNob3I9InN0YXJ0Ij5Jbml0aWFsaXplIHRoaXMgcmVwb3NpdG9yeSB3aXRoOjwvdGV4dD48cmVjdCB4PSI2MCIgeT0iNDgyIiB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHJ4PSIzIiBmaWxsPSIjMDk2OWRhIi8+PHRleHQgeD0iNjMiIHk9IjQ5NSIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiIGZvbnQtd2VpZ2h0PSI3MDAiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ic3RhcnQiPuKckzwvdGV4dD48dGV4dCB4PSI4NCIgeT0iNDk2IiBmb250LWZhbWlseT0ic3lzdGVtLXVpLC1hcHBsZS1zeXN0ZW0sc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMiIgZm9udC13ZWlnaHQ9IjQwMCIgZmlsbD0iIzI0MjkyZiIgdGV4dC1hbmNob3I9InN0YXJ0Ij5BZGQgYSBSRUFETUUgZmlsZTwvdGV4dD48dGV4dCB4PSI4NCIgeT0iNTEyIiBmb250LWZhbWlseT0ic3lzdGVtLXVpLC1hcHBsZS1zeXN0ZW0sc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSIgZm9udC13ZWlnaHQ9IjQwMCIgZmlsbD0iIzY1NmQ3NiIgdGV4dC1hbmNob3I9InN0YXJ0Ij5UaGlzIGlzIHdoZXJlIHlvdSBjYW4gd3JpdGUgYSBsb25nIGRlc2NyaXB0aW9uIGZvciB5b3VyIHByb2plY3QuPC90ZXh0PjxyZWN0IHg9IjYwIiB5PSI1MzkiIHdpZHRoPSIyMDAiIGhlaWdodD0iMzYiIHJ4PSI2IiBmaWxsPSIjMmRhNDRlIi8+PHRleHQgeD0iMTYwIiB5PSI1NjEiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksLWFwcGxlLXN5c3RlbSxzYW5zLXNlcmlmIiBmb250LXNpemU9IjE0IiBmb250LXdlaWdodD0iNjAwIiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+Q3JlYXRlIHJlcG9zaXRvcnk8L3RleHQ+PC9zdmc+" alt="GitHub new repository page with the username.github.io name filled in" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'" />
+        <div style="display:none; align-items:center; justify-content:center; height:160px; background:#f8fafc; color:#94a3b8; font-size:.85rem; gap:.5rem;">
+          📸 Screenshot will appear here
+        </div>
+      </div>
+
+      <div class="tip">
+        <strong>✅ You're done when:</strong> you can see your new repository page on GitHub at <code>github.com/yourusername/yourusername.github.io</code> with a green <em>Code</em> button and a README file listed. This is your remote repo — it now exists on GitHub's servers!
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════
+       STEP 6: Connect VS Code to GitHub
+  ═══════════════════════════════════════ -->
+  <section id="step6" style="margin-top:1.5rem;">
+    <div class="step">
+      <div class="step-header">
+        <div class="step-num">6</div>
+        <h2>Connect VS Code to Your GitHub Repository
+          <span class="subtitle">Download your repository to your computer so you can edit it</span>
+        </h2>
+      </div>
+
+      <div class="concept">
+        <strong>📥 What is "cloning"?</strong> Cloning a repository means making a copy of it on your computer. After cloning, you'll have a folder on your PC that is linked to GitHub — any changes you make can be sent back up to GitHub with a click. Think of it like syncing a folder with OneDrive or Dropbox.
+      </div>
+
+      <h3 style="font-size:1rem; font-weight:600; margin:.75rem 0 .4rem;">Get your repository's address</h3>
+      <ol>
+        <li>On your repository page on GitHub, click the green <strong>Code</strong> button</li>
+        <li>Make sure <strong>HTTPS</strong> is selected (not SSH)</li>
+        <li>Click the copy icon next to the URL — it will look like <code>https://github.com/yourusername/yourusername.github.io.git</code></li>
+      </ol>
+
+      <div class="screenshot-wrap">
+        <div class="screenshot-label">📸 Screenshot — Copying the repository URL from GitHub</div>
+        <img src="data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgNzIwIDQ3MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iNzIwIiBoZWlnaHQ9IjQ3MCIgcng9IjEwIiBmaWxsPSIjMmQyZDJkIi8+PHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjcyMCIgaGVpZ2h0PSIzNiIgcng9IjEwIiBmaWxsPSIjZGVlMWU2Ii8+PHJlY3QgeD0iMCIgeT0iMTgiIHdpZHRoPSI3MjAiIGhlaWdodD0iMTgiIGZpbGw9IiNkZWUxZTYiLz48cmVjdCB4PSI1IiB5PSI1IiB3aWR0aD0iMTgwIiBoZWlnaHQ9IjMxIiByeD0iNSIgZmlsbD0id2hpdGUiLz48Y2lyY2xlIGN4PSIyMSIgY3k9IjIxIiByPSI2IiBmaWxsPSIjZGRlMWU3Ii8+PHRleHQgeD0iMzMiIHk9IjI2IiBmb250LWZhbWlseT0ic3lzdGVtLXVpLC1hcHBsZS1zeXN0ZW0sc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSIgZm9udC13ZWlnaHQ9IjQwMCIgZmlsbD0iIzM3NDE1MSIgdGV4dC1hbmNob3I9InN0YXJ0Ij53aWxsb21pL3dpbGxvbWkuZ2l0aHViLmlvPC90ZXh0Pjx0ZXh0IHg9IjE3NCIgeT0iMjYiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksLWFwcGxlLXN5c3RlbSxzYW5zLXNlcmlmIiBmb250LXNpemU9IjkiIGZvbnQtd2VpZ2h0PSI0MDAiIGZpbGw9IiM5Y2EzYWYiIHRleHQtYW5jaG9yPSJzdGFydCI+4pyVPC90ZXh0Pjx0ZXh0IHg9IjE5MyIgeT0iMjciIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksLWFwcGxlLXN5c3RlbSxzYW5zLXNlcmlmIiBmb250LXNpemU9IjE1IiBmb250LXdlaWdodD0iNDAwIiBmaWxsPSIjOWNhM2FmIiB0ZXh0LWFuY2hvcj0ic3RhcnQiPis8L3RleHQ+PHRleHQgeD0iNjQwIiB5PSIyMSIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTIiIGZvbnQtd2VpZ2h0PSI0MDAiIGZpbGw9IiM3NzciIHRleHQtYW5jaG9yPSJzdGFydCI+4pSAPC90ZXh0PjxyZWN0IHg9IjY1OCIgeT0iOSIgd2lkdGg9IjE0IiBoZWlnaHQ9IjExIiByeD0iMiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNzc3IiBzdHJva2Utd2lkdGg9IjEuMiIvPjx0ZXh0IHg9IjY4NiIgeT0iMjIiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksLWFwcGxlLXN5c3RlbSxzYW5zLXNlcmlmIiBmb250LXNpemU9IjEzIiBmb250LXdlaWdodD0iNDAwIiBmaWxsPSIjNzc3IiB0ZXh0LWFuY2hvcj0ic3RhcnQiPuKclTwvdGV4dD48cmVjdCB4PSIwIiB5PSIzNiIgd2lkdGg9IjcyMCIgaGVpZ2h0PSI0MCIgcng9IjAiIGZpbGw9IiNmMWYzZjQiLz48dGV4dCB4PSIxMCIgeT0iNjIiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksLWFwcGxlLXN5c3RlbSxzYW5zLXNlcmlmIiBmb250LXNpemU9IjE2IiBmb250LXdlaWdodD0iNDAwIiBmaWxsPSIjYWFhIiB0ZXh0LWFuY2hvcj0ic3RhcnQiPuKGkDwvdGV4dD48dGV4dCB4PSIzMCIgeT0iNjIiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksLWFwcGxlLXN5c3RlbSxzYW5zLXNlcmlmIiBmb250LXNpemU9IjE2IiBmb250LXdlaWdodD0iNDAwIiBmaWxsPSIjZDBkMGQwIiB0ZXh0LWFuY2hvcj0ic3RhcnQiPuKGkjwvdGV4dD48dGV4dCB4PSI1MCIgeT0iNjAiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksLWFwcGxlLXN5c3RlbSxzYW5zLXNlcmlmIiBmb250LXNpemU9IjEzIiBmb250LXdlaWdodD0iNDAwIiBmaWxsPSIjNzc3IiB0ZXh0LWFuY2hvcj0ic3RhcnQiPuKGuzwvdGV4dD48cmVjdCB4PSI2NiIgeT0iNDQiIHdpZHRoPSI2MTgiIGhlaWdodD0iMjIiIHJ4PSIxMSIgZmlsbD0id2hpdGUiIHN0cm9rZT0iI2UwZTBlMCIgc3Ryb2tlLXdpZHRoPSIxLjUiLz48dGV4dCB4PSI4MCIgeT0iNjAiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksLWFwcGxlLXN5c3RlbSxzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIiBmb250LXdlaWdodD0iNDAwIiBmaWxsPSIjMzc0MTUxIiB0ZXh0LWFuY2hvcj0ic3RhcnQiPmdpdGh1Yi5jb20vd2lsbG9taS93aWxsb21pLmdpdGh1Yi5pbzwvdGV4dD48dGV4dCB4PSI2OTAiIHk9IjYwIiBmb250LWZhbWlseT0ic3lzdGVtLXVpLC1hcHBsZS1zeXN0ZW0sc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNSIgZm9udC13ZWlnaHQ9IjQwMCIgZmlsbD0iIzljYTNhZiIgdGV4dC1hbmNob3I9InN0YXJ0Ij7ii648L3RleHQ+PGxpbmUgeDE9IjAiIHkxPSI3NSIgeDI9IjcyMCIgeTI9Ijc1IiBzdHJva2U9IiNlNWU3ZWIiIHN0cm9rZS13aWR0aD0iMSIvPjxyZWN0IHg9IjAiIHk9Ijc2IiB3aWR0aD0iNzIwIiBoZWlnaHQ9IjM5NCIgcng9IjAiIGZpbGw9IndoaXRlIi8+PHJlY3QgeD0iMCIgeT0iNzYiIHdpZHRoPSI3MjAiIGhlaWdodD0iNDgiIHJ4PSIwIiBmaWxsPSIjMjQyOTJmIi8+PHRleHQgeD0iMTgiIHk9IjEwNyIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMjAiIGZvbnQtd2VpZ2h0PSI0MDAiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ic3RhcnQiPuKsoTwvdGV4dD48dGV4dCB4PSI0NiIgeT0iMTA3IiBmb250LWZhbWlseT0ic3lzdGVtLXVpLC1hcHBsZS1zeXN0ZW0sc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMyIgZm9udC13ZWlnaHQ9IjYwMCIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJzdGFydCI+d2lsbG9taSAvIHdpbGxvbWkuZ2l0aHViLmlvPC90ZXh0PjxjaXJjbGUgY3g9IjY5NSIgY3k9IjEwMCIgcj0iMTQiIGZpbGw9IiM0NDRkNTYiLz48dGV4dCB4PSI2OTUiIHk9IjEwNSIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTIiIGZvbnQtd2VpZ2h0PSI3MDAiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5XPC90ZXh0PjxyZWN0IHg9IjAiIHk9IjEyNCIgd2lkdGg9IjcyMCIgaGVpZ2h0PSI0MCIgcng9IjAiIGZpbGw9IiMyNDI5MmYiLz48dGV4dCB4PSIxOCIgeT0iMTQ4IiBmb250LWZhbWlseT0ic3lzdGVtLXVpLC1hcHBsZS1zeXN0ZW0sc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMiIgZm9udC13ZWlnaHQ9IjYwMCIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJzdGFydCI+4o6LICBDb2RlPC90ZXh0PjxsaW5lIHgxPSIxOCIgeTE9IjE2MiIgeDI9IjcwIiB5Mj0iMTYyIiBzdHJva2U9IiNmNzgxNjYiIHN0cm9rZS13aWR0aD0iMiIvPjx0ZXh0IHg9IjkwIiB5PSIxNDgiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksLWFwcGxlLXN5c3RlbSxzYW5zLXNlcmlmIiBmb250LXNpemU9IjEyIiBmb250LXdlaWdodD0iNDAwIiBmaWxsPSIjZTZlZGYzIiB0ZXh0LWFuY2hvcj0ic3RhcnQiPklzc3VlcyAgMDwvdGV4dD48dGV4dCB4PSIxNTgiIHk9IjE0OCIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTIiIGZvbnQtd2VpZ2h0PSI0MDAiIGZpbGw9IiNlNmVkZjMiIHRleHQtYW5jaG9yPSJzdGFydCI+UHVsbCByZXF1ZXN0cyAgMDwvdGV4dD48dGV4dCB4PSIyODYiIHk9IjE0OCIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTIiIGZvbnQtd2VpZ2h0PSI0MDAiIGZpbGw9IiNlNmVkZjMiIHRleHQtYW5jaG9yPSJzdGFydCI+U2V0dGluZ3M8L3RleHQ+PHJlY3QgeD0iMCIgeT0iMTY0IiB3aWR0aD0iNzIwIiBoZWlnaHQ9IjQ0IiByeD0iMCIgZmlsbD0iI2Y2ZjhmYSIvPjxsaW5lIHgxPSIwIiB5MT0iMjA4IiB4Mj0iNzIwIiB5Mj0iMjA4IiBzdHJva2U9IiNlNWU3ZWIiIHN0cm9rZS13aWR0aD0iMSIvPjx0ZXh0IHg9IjE4IiB5PSIxOTIiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksLWFwcGxlLXN5c3RlbSxzYW5zLXNlcmlmIiBmb250LXNpemU9IjEyIiBmb250LXdlaWdodD0iNjAwIiBmaWxsPSIjMjQyOTJmIiB0ZXh0LWFuY2hvcj0ic3RhcnQiPuKRgiAgbWFpbiDilr48L3RleHQ+PHRleHQgeD0iMTIwIiB5PSIxOTIiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksLWFwcGxlLXN5c3RlbSxzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIiBmb250LXdlaWdodD0iNDAwIiBmaWxsPSIjNjU2ZDc2IiB0ZXh0LWFuY2hvcj0ic3RhcnQiPjEgYnJhbmNoICB8ICAwIHRhZ3M8L3RleHQ+PHJlY3QgeD0iNTg2IiB5PSIxNzQiIHdpZHRoPSIxMTYiIGhlaWdodD0iMjgiIHJ4PSI2IiBmaWxsPSIjMmRhNDRlIi8+PHRleHQgeD0iNjQ0IiB5PSIxOTIiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksLWFwcGxlLXN5c3RlbSxzYW5zLXNlcmlmIiBmb250LXNpemU9IjEzIiBmb250LXdlaWdodD0iNjAwIiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+4pa8ICBDb2RlPC90ZXh0PjxyZWN0IHg9IjQwNiIgeT0iMjEwIiB3aWR0aD0iMzAwIiBoZWlnaHQ9IjE4NiIgcng9IjgiIGZpbGw9IndoaXRlIiBzdHJva2U9IiNkMGQ3ZGUiIHN0cm9rZS13aWR0aD0iMS41Ii8+PHRleHQgeD0iNDE2IiB5PSIyMjgiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksLWFwcGxlLXN5c3RlbSxzYW5zLXNlcmlmIiBmb250LXNpemU9IjEzIiBmb250LXdlaWdodD0iNzAwIiBmaWxsPSIjMjQyOTJmIiB0ZXh0LWFuY2hvcj0ic3RhcnQiPkNsb25lPC90ZXh0PjxyZWN0IHg9IjQxMCIgeT0iMjM2IiB3aWR0aD0iMzAwIiBoZWlnaHQ9IjI4IiByeD0iMCIgZmlsbD0iI2Y2ZjhmYSIvPjxyZWN0IHg9IjQxMCIgeT0iMjM2IiB3aWR0aD0iMTAwIiBoZWlnaHQ9IjI4IiByeD0iMCIgZmlsbD0id2hpdGUiIHN0cm9rZT0iI2QwZDdkZSIgc3Ryb2tlLXdpZHRoPSIxIi8+PGxpbmUgeDE9IjQxMCIgeTE9IjIzNiIgeDI9IjUxMCIgeTI9IjIzNiIgc3Ryb2tlPSIjZjc4MTY2IiBzdHJva2Utd2lkdGg9IjIiLz48dGV4dCB4PSI0NjAiIHk9IjI1NCIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiIGZvbnQtd2VpZ2h0PSI3MDAiIGZpbGw9IiMyNDI5MmYiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkhUVFBTPC90ZXh0Pjx0ZXh0IHg9IjU0OCIgeT0iMjU0IiBmb250LWZhbWlseT0ic3lzdGVtLXVpLC1hcHBsZS1zeXN0ZW0sc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSIgZm9udC13ZWlnaHQ9IjQwMCIgZmlsbD0iIzY1NmQ3NiIgdGV4dC1hbmNob3I9Im1pZGRsZSI+U1NIPC90ZXh0Pjx0ZXh0IHg9IjYyMCIgeT0iMjU0IiBmb250LWZhbWlseT0ic3lzdGVtLXVpLC1hcHBsZS1zeXN0ZW0sc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSIgZm9udC13ZWlnaHQ9IjQwMCIgZmlsbD0iIzY1NmQ3NiIgdGV4dC1hbmNob3I9Im1pZGRsZSI+R2l0SHViIENMSTwvdGV4dD48dGV4dCB4PSI0MTYiIHk9IjI3OCIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiIGZvbnQtd2VpZ2h0PSI0MDAiIGZpbGw9IiM2NTZkNzYiIHRleHQtYW5jaG9yPSJzdGFydCI+VXNlIEdpdCBvciBjaGVja291dCB3aXRoIFNWTiB1c2luZyB0aGUgd2ViIFVSTC48L3RleHQ+PHJlY3QgeD0iNDEyIiB5PSIyOTIiIHdpZHRoPSIyNTIiIGhlaWdodD0iMzAiIHJ4PSI0IiBmaWxsPSIjZjZmOGZhIiBzdHJva2U9IiNkMGQ3ZGUiIHN0cm9rZS13aWR0aD0iMSIvPjx0ZXh0IHg9IjQxOCIgeT0iMzExIiBmb250LWZhbWlseT0ic3lzdGVtLXVpLC1hcHBsZS1zeXN0ZW0sc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMCIgZm9udC13ZWlnaHQ9IjQwMCIgZmlsbD0iIzI0MjkyZiIgdGV4dC1hbmNob3I9InN0YXJ0Ij5naXRodWIuY29tL3dpbGxvbWkvd2lsbG9taS5naXRodWIuaW8uZ2l0PC90ZXh0PjxyZWN0IHg9IjY2OCIgeT0iMjkyIiB3aWR0aD0iNDIiIGhlaWdodD0iMzAiIHJ4PSI0IiBmaWxsPSIjZjZmOGZhIi8+PHRleHQgeD0iNjg5IiB5PSIzMTEiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksLWFwcGxlLXN5c3RlbSxzYW5zLXNlcmlmIiBmb250LXNpemU9IjE0IiBmb250LXdlaWdodD0iNjAwIiBmaWxsPSIjNTU1IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj7ijpg8L3RleHQ+PHRleHQgeD0iNDE2IiB5PSIzNDAiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksLWFwcGxlLXN5c3RlbSxzYW5zLXNlcmlmIiBmb250LXNpemU9IjEyIiBmb250LXdlaWdodD0iNDAwIiBmaWxsPSIjMDk2OWRhIiB0ZXh0LWFuY2hvcj0ic3RhcnQiPk9wZW4gd2l0aCBHaXRIdWIgRGVza3RvcDwvdGV4dD48dGV4dCB4PSI0MTYiIHk9IjM2MSIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTIiIGZvbnQtd2VpZ2h0PSI0MDAiIGZpbGw9IiMwOTY5ZGEiIHRleHQtYW5jaG9yPSJzdGFydCI+RG93bmxvYWQgWklQPC90ZXh0Pjx0ZXh0IHg9IjE4IiB5PSIyMjgiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksLWFwcGxlLXN5c3RlbSxzYW5zLXNlcmlmIiBmb250LXNpemU9IjEyIiBmb250LXdlaWdodD0iNDAwIiBmaWxsPSIjMDk2OWRhIiB0ZXh0LWFuY2hvcj0ic3RhcnQiPlJFQURNRS5tZDwvdGV4dD48L3N2Zz4=" alt="GitHub repository page with the Code dropdown showing the HTTPS URL" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'" />
+        <div style="display:none; align-items:center; justify-content:center; height:160px; background:#f8fafc; color:#94a3b8; font-size:.85rem; gap:.5rem;">
+          📸 Screenshot will appear here
+        </div>
+      </div>
+
+      <h3 style="font-size:1rem; font-weight:600; margin:1rem 0 .4rem;">Clone (download) the repo in VS Code</h3>
+      <ol>
+        <li>Open VS Code</li>
+        <li>Press <kbd style="background:#e2e8f0; border-radius:4px; padding:1px 6px; font-size:.85em;">Ctrl</kbd> + <kbd style="background:#e2e8f0; border-radius:4px; padding:1px 6px; font-size:.85em;">Shift</kbd> + <kbd style="background:#e2e8f0; border-radius:4px; padding:1px 6px; font-size:.85em;">P</kbd> to open the <strong>Command Palette</strong> (a search bar that appears at the top of VS Code)</li>
+        <li>Type <code>Git: Clone</code> and press <strong>Enter</strong></li>
+        <li>Paste the URL you copied from GitHub and press <strong>Enter</strong></li>
+        <li>A file explorer window will appear — choose a location to save the folder (e.g., your <strong>Documents</strong> folder) and click <strong>Select Repository Location</strong></li>
+        <li>VS Code will ask "Would you like to open the cloned repository?" — click <strong>Open</strong></li>
+        <li>A pop-up may ask "Do you trust the authors of the files in this folder?" — click <strong>Yes, I trust the authors</strong></li>
+      </ol>
+
+      <div class="screenshot-wrap">
+        <div class="screenshot-label">📸 Screenshot — Cloning the repo in VS Code via the Command Palette</div>
+        <img src="data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgODIwIDUwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iODIwIiBoZWlnaHQ9IjUwMCIgcng9IjgiIGZpbGw9IiMxZTFlMWUiLz48cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iODIwIiBoZWlnaHQ9IjMwIiByeD0iOCIgZmlsbD0iIzNjM2MzYyIvPjxyZWN0IHg9IjAiIHk9IjE1IiB3aWR0aD0iODIwIiBoZWlnaHQ9IjE1IiBmaWxsPSIjM2MzYzNjIi8+PHRleHQgeD0iNDEwIiB5PSIyMCIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTIiIGZvbnQtd2VpZ2h0PSI0MDAiIGZpbGw9IiNjY2NjY2MiIHRleHQtYW5jaG9yPSJtaWRkbGUiPlZpc3VhbCBTdHVkaW8gQ29kZTwvdGV4dD48dGV4dCB4PSI3ODYiIHk9IjIwIiBmb250LWZhbWlseT0ic3lzdGVtLXVpLC1hcHBsZS1zeXN0ZW0sc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMyIgZm9udC13ZWlnaHQ9IjQwMCIgZmlsbD0iIzg4OCIgdGV4dC1hbmNob3I9InN0YXJ0Ij7inJU8L3RleHQ+PHJlY3QgeD0iMCIgeT0iMzAiIHdpZHRoPSI4MjAiIGhlaWdodD0iMjgiIHJ4PSIwIiBmaWxsPSIjM2MzYzNjIi8+PHRleHQgeD0iMTAiIHk9IjQ4IiBmb250LWZhbWlseT0ic3lzdGVtLXVpLC1hcHBsZS1zeXN0ZW0sc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSIgZm9udC13ZWlnaHQ9IjQwMCIgZmlsbD0iI2NjY2NjYyIgdGV4dC1hbmNob3I9InN0YXJ0Ij5GaWxlPC90ZXh0Pjx0ZXh0IHg9Ijc2IiB5PSI0OCIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiIGZvbnQtd2VpZ2h0PSI0MDAiIGZpbGw9IiNjY2NjY2MiIHRleHQtYW5jaG9yPSJzdGFydCI+RWRpdDwvdGV4dD48dGV4dCB4PSIxNDIiIHk9IjQ4IiBmb250LWZhbWlseT0ic3lzdGVtLXVpLC1hcHBsZS1zeXN0ZW0sc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSIgZm9udC13ZWlnaHQ9IjQwMCIgZmlsbD0iI2NjY2NjYyIgdGV4dC1hbmNob3I9InN0YXJ0Ij5TZWxlY3Rpb248L3RleHQ+PHRleHQgeD0iMjA4IiB5PSI0OCIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiIGZvbnQtd2VpZ2h0PSI0MDAiIGZpbGw9IiNjY2NjY2MiIHRleHQtYW5jaG9yPSJzdGFydCI+VmlldzwvdGV4dD48dGV4dCB4PSIyNzQiIHk9IjQ4IiBmb250LWZhbWlseT0ic3lzdGVtLXVpLC1hcHBsZS1zeXN0ZW0sc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSIgZm9udC13ZWlnaHQ9IjQwMCIgZmlsbD0iI2NjY2NjYyIgdGV4dC1hbmNob3I9InN0YXJ0Ij5UZXJtaW5hbDwvdGV4dD48dGV4dCB4PSIzNDAiIHk9IjQ4IiBmb250LWZhbWlseT0ic3lzdGVtLXVpLC1hcHBsZS1zeXN0ZW0sc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSIgZm9udC13ZWlnaHQ9IjQwMCIgZmlsbD0iI2NjY2NjYyIgdGV4dC1hbmNob3I9InN0YXJ0Ij5IZWxwPC90ZXh0PjxyZWN0IHg9IjAiIHk9IjU4IiB3aWR0aD0iNDgiIGhlaWdodD0iNDQyIiByeD0iMCIgZmlsbD0iIzMzMzMzMyIvPjx0ZXh0IHg9IjI0IiB5PSI4NiIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTYiIGZvbnQtd2VpZ2h0PSI0MDAiIGZpbGw9IiNjY2NjY2MiIHRleHQtYW5jaG9yPSJtaWRkbGUiPuKOizwvdGV4dD48cmVjdCB4PSIwIiB5PSI1OCIgd2lkdGg9IjMiIGhlaWdodD0iNDAiIGZpbGw9IiMwMDdhY2MiLz48cmVjdCB4PSI0OCIgeT0iNTgiIHdpZHRoPSIyMjAiIGhlaWdodD0iNDQyIiByeD0iMCIgZmlsbD0iIzI1MjUyNiIvPjx0ZXh0IHg9IjYwIiB5PSI4MiIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTAiIGZvbnQtd2VpZ2h0PSI2MDAiIGZpbGw9IiNiYmIiIHRleHQtYW5jaG9yPSJzdGFydCI+RVhQTE9SRVI8L3RleHQ+PHRleHQgeD0iNjAiIHk9IjEwNiIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiIGZvbnQtd2VpZ2h0PSI0MDAiIGZpbGw9IiM2NjYiIHRleHQtYW5jaG9yPSJzdGFydCIgZm9udC1zdHlsZT0iaXRhbGljIj5ObyBmb2xkZXIgb3BlbmVkPC90ZXh0Pjx0ZXh0IHg9IjYwIiB5PSIxMjYiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksLWFwcGxlLXN5c3RlbSxzYW5zLXNlcmlmIiBmb250LXNpemU9IjEyIiBmb250LXdlaWdodD0iNDAwIiBmaWxsPSIjMDk2OWRhIiB0ZXh0LWFuY2hvcj0ic3RhcnQiPkNsb25lIFJlcG9zaXRvcnk8L3RleHQ+PHJlY3QgeD0iMjY4IiB5PSI1OCIgd2lkdGg9IjU1MiIgaGVpZ2h0PSI0NDIiIHJ4PSIwIiBmaWxsPSIjMWUxZTFlIi8+PHRleHQgeD0iMjg4IiB5PSIxMDgiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksLWFwcGxlLXN5c3RlbSxzYW5zLXNlcmlmIiBmb250LXNpemU9IjE0IiBmb250LXdlaWdodD0iNjAwIiBmaWxsPSIjY2NjY2NjIiB0ZXh0LWFuY2hvcj0ic3RhcnQiPlN0YXJ0PC90ZXh0Pjx0ZXh0IHg9IjI4OCIgeT0iMTM2IiBmb250LWZhbWlseT0ic3lzdGVtLXVpLC1hcHBsZS1zeXN0ZW0sc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMiIgZm9udC13ZWlnaHQ9IjQwMCIgZmlsbD0iIzljYTNhZiIgdGV4dC1hbmNob3I9InN0YXJ0Ij5OZXcgZmlsZTwvdGV4dD48dGV4dCB4PSIyODgiIHk9IjE1NCIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTIiIGZvbnQtd2VpZ2h0PSI0MDAiIGZpbGw9IiM5Y2EzYWYiIHRleHQtYW5jaG9yPSJzdGFydCI+T3BlbiBmb2xkZXI8L3RleHQ+PHRleHQgeD0iMjg4IiB5PSIxNzIiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksLWFwcGxlLXN5c3RlbSxzYW5zLXNlcmlmIiBmb250LXNpemU9IjEyIiBmb250LXdlaWdodD0iNDAwIiBmaWxsPSIjOWNhM2FmIiB0ZXh0LWFuY2hvcj0ic3RhcnQiPkNsb25lIEdpdCBSZXBvc2l0b3J5Li4uPC90ZXh0PjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSI4MjAiIGhlaWdodD0iNTAwIiByeD0iOCIgZmlsbD0iIzAwMDAwMDYwIi8+PHJlY3QgeD0iMTcwIiB5PSI3MCIgd2lkdGg9IjQ4MCIgaGVpZ2h0PSI0MiIgcng9IjYiIGZpbGw9IiMzYzNjM2MiIHN0cm9rZT0iIzZiOWZkZiIgc3Ryb2tlLXdpZHRoPSIyIi8+PHRleHQgeD0iMTgyIiB5PSI5NiIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTMiIGZvbnQtd2VpZ2h0PSI0MDAiIGZpbGw9IiNjY2NjY2MiIHRleHQtYW5jaG9yPSJzdGFydCI+Jmd0OyBHaXQ6IENsb25lPC90ZXh0PjxyZWN0IHg9IjE3MCIgeT0iMTEyIiB3aWR0aD0iNDgwIiBoZWlnaHQ9IjU4IiByeD0iMCIgZmlsbD0iIzI1MjUyNiIgc3Ryb2tlPSIjM2MzYzNjIiBzdHJva2Utd2lkdGg9IjEiLz48cmVjdCB4PSIxNzAiIHk9IjExMiIgd2lkdGg9IjQ4MCIgaGVpZ2h0PSIzMCIgcng9IjAiIGZpbGw9IiMwOTQ3NzEiLz48dGV4dCB4PSIxODIiIHk9IjEzMCIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTMiIGZvbnQtd2VpZ2h0PSI3MDAiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ic3RhcnQiPkdpdDogQ2xvbmU8L3RleHQ+PHRleHQgeD0iMTgyIiB5PSIxNTAiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksLWFwcGxlLXN5c3RlbSxzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIiBmb250LXdlaWdodD0iNDAwIiBmaWxsPSIjOWNkY2ZlIiB0ZXh0LWFuY2hvcj0ic3RhcnQiPkdpdDogQ2xvbmUgIOKAlCAgQ2xvbmUgYSByZXBvc2l0b3J5IGludG8gYSBsb2NhbCBmb2xkZXI8L3RleHQ+PHRleHQgeD0iNjM4IiB5PSIxMzAiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksLWFwcGxlLXN5c3RlbSxzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIiBmaWxsPSIjOWNhM2FmIiB0ZXh0LWFuY2hvcj0iZW5kIj5HaXQ8L3RleHQ+PC9zdmc+" alt="VS Code Command Palette with Git Clone command" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'" />
+        <div style="display:none; align-items:center; justify-content:center; height:160px; background:#f8fafc; color:#94a3b8; font-size:.85rem; gap:.5rem;">
+          📸 Screenshot will appear here
+        </div>
+      </div>
+
+      <h3 style="font-size:1rem; font-weight:600; margin:1rem 0 .4rem;">Sign in to GitHub from VS Code</h3>
+      <p>VS Code will need permission to send files to GitHub on your behalf. When prompted:</p>
+      <ol>
+        <li>A browser window will open asking you to sign in to GitHub — sign in with your username and password</li>
+        <li>GitHub may show a page saying <strong>"Authorize GitHub for VS Code"</strong> — click <strong>Authorize</strong></li>
+        <li>Your browser may ask to open VS Code — click <strong>Open</strong></li>
+      </ol>
+
+      <div class="tip">
+        <strong>✅ You're done when:</strong> VS Code shows your repository folder in the left sidebar with the <code>README.md</code> file listed.
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════
+       STEP 7: Write Your Quarto Webpage
+  ═══════════════════════════════════════ -->
+  <section id="step7" style="margin-top:1.5rem;">
+    <div class="step">
+      <div class="step-header">
+        <div class="step-num">7</div>
+        <h2>Write Your Quarto Webpage
+          <span class="subtitle">Create a simple page using Quarto's easy text format</span>
+        </h2>
+      </div>
+
+      <div class="concept">
+        <strong>✍️ What is a .qmd file?</strong> A <code>.qmd</code> file (Quarto Markdown) is a plain text file you write with simple formatting symbols. For example, putting <code>#</code> before a line makes it a big heading, and surrounding text with <code>**double asterisks**</code> makes it <strong>bold</strong>. Quarto reads these symbols and converts them into a properly styled webpage.
+      </div>
+
+      <!-- Markdown cheatsheet diagram -->
+      <div class="diagram">
+        <figure>
+          <svg viewBox="0 0 660 220" xmlns="http://www.w3.org/2000/svg" style="max-width:640px; width:100%;">
+            <rect x="0" y="0" width="660" height="220" rx="10" fill="#1e293b"/>
+            <text x="20" y="24" font-family="Inter,sans-serif" font-size="11" font-weight="700" fill="#7dd3fc" letter-spacing="1">QUICK FORMATTING GUIDE (Quarto Markdown)</text>
+            <!-- Headers -->
+            <text x="20" y="50" font-family="JetBrains Mono,monospace" font-size="11" fill="#f472b6"># Big Heading</text>
+            <text x="220" y="50" font-family="Inter,sans-serif" font-size="11" fill="#94a3b8">→</text>
+            <text x="240" y="50" font-family="Inter,sans-serif" font-size="16" font-weight="700" fill="#f1f5f9">Big Heading</text>
+            <text x="20" y="70" font-family="JetBrains Mono,monospace" font-size="11" fill="#f472b6">## Smaller Heading</text>
+            <text x="220" y="70" font-family="Inter,sans-serif" font-size="11" fill="#94a3b8">→</text>
+            <text x="240" y="70" font-family="Inter,sans-serif" font-size="13" font-weight="600" fill="#f1f5f9">Smaller Heading</text>
+            <!-- Bold / italic -->
+            <text x="20" y="98" font-family="JetBrains Mono,monospace" font-size="11" fill="#34d399">**bold text**</text>
+            <text x="220" y="98" font-family="Inter,sans-serif" font-size="11" fill="#94a3b8">→</text>
+            <text x="240" y="98" font-family="Inter,sans-serif" font-size="12" font-weight="700" fill="#f1f5f9">bold text</text>
+            <text x="20" y="116" font-family="JetBrains Mono,monospace" font-size="11" fill="#34d399">*italic text*</text>
+            <text x="220" y="116" font-family="Inter,sans-serif" font-size="11" fill="#94a3b8">→</text>
+            <text x="240" y="116" font-family="Inter,sans-serif" font-size="12" font-style="italic" fill="#f1f5f9">italic text</text>
+            <!-- Links -->
+            <text x="20" y="142" font-family="JetBrains Mono,monospace" font-size="11" fill="#fbbf24">[Link text](https://url)</text>
+            <text x="220" y="142" font-family="Inter,sans-serif" font-size="11" fill="#94a3b8">→</text>
+            <text x="240" y="142" font-family="Inter,sans-serif" font-size="12" fill="#60a5fa" text-decoration="underline">Link text</text>
+            <!-- Lists -->
+            <text x="20" y="166" font-family="JetBrains Mono,monospace" font-size="11" fill="#c084fc">- Item one</text>
+            <text x="220" y="166" font-family="Inter,sans-serif" font-size="11" fill="#94a3b8">→</text>
+            <text x="240" y="166" font-family="Inter,sans-serif" font-size="12" fill="#f1f5f9">• Item one</text>
+            <text x="20" y="184" font-family="JetBrains Mono,monospace" font-size="11" fill="#c084fc">- Item two</text>
+            <text x="240" y="184" font-family="Inter,sans-serif" font-size="12" fill="#f1f5f9">• Item two</text>
+            <!-- Images -->
+            <text x="20" y="208" font-family="JetBrains Mono,monospace" font-size="11" fill="#fb923c">![Alt text](image.png)</text>
+            <text x="220" y="208" font-family="Inter,sans-serif" font-size="11" fill="#94a3b8">→</text>
+            <text x="240" y="208" font-family="Inter,sans-serif" font-size="12" fill="#f1f5f9">🖼 An image</text>
+          </svg>
+          <figcaption>Quarto Markdown: simple text symbols that become formatted webpage elements</figcaption>
+        </figure>
+      </div>
+
+      <h3 style="font-size:1rem; font-weight:600; margin:.75rem 0 .4rem;">Create your Quarto file</h3>
+      <ol>
+        <li>In VS Code, with your repository folder open, go to <strong>File → New File</strong></li>
+        <li>Name it <code>index.qmd</code> and save it in your repository folder</li>
+        <li>Copy and paste the following starter template into the file:</li>
+      </ol>
+
+      <pre><code>---
+title: "My First Webpage"
+author: "Your Name"
+date: today
+format:
+  html:
+    theme: cosmo
+    toc: true
+---
+
+## Welcome!
+
+Hello! This is my first webpage, built with [Quarto](https://quarto.org)
+and hosted on GitHub Pages.
+
+## About Me
+
+Write a few sentences about yourself here.
+
+## My Interests
+
+- Interest one
+- Interest two
+- Interest three
+
+## Contact
+
+You can find me on [GitHub](https://github.com/yourusername).</code></pre>
+
+      <div class="concept">
+        <strong>📌 About the top section (the "YAML header"):</strong> The section between the <code>---</code> lines at the top is called the YAML header. It gives Quarto instructions: what the title is, who wrote it, and how to format the page. The <code>theme: cosmo</code> line picks a visual style for your page (you can change it to <code>flatly</code>, <code>journal</code>, <code>lux</code>, or <code>sketchy</code> to try different looks). The <code>toc: true</code> line adds a clickable table of contents automatically.
+      </div>
+
+      <ol start="4">
+        <li>Edit the file to personalise it — change the title, add your name, write about yourself</li>
+        <li>Save the file with <kbd style="background:#e2e8f0; border-radius:4px; padding:1px 6px; font-size:.85em;">Ctrl</kbd> + <kbd style="background:#e2e8f0; border-radius:4px; padding:1px 6px; font-size:.85em;">S</kbd></li>
+      </ol>
+
+      <div class="tip">
+        <strong>✅ You're done when:</strong> you have an <code>index.qmd</code> file saved in your project folder with your personal content.
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════
+       STEP 8: Render and Publish
+  ═══════════════════════════════════════ -->
+  <section id="step8" style="margin-top:1.5rem;">
+    <div class="step">
+      <div class="step-header">
+        <div class="step-num">8</div>
+        <h2>Render Your Page and Publish to GitHub
+          <span class="subtitle">Convert your .qmd file into HTML and send it live to the world</span>
+        </h2>
+      </div>
+
+      <div class="concept">
+        <strong>🚀 What is "rendering"?</strong> Rendering is the process where Quarto reads your <code>.qmd</code> text file and produces a polished <code>.html</code> webpage file. Once you have the HTML file, you'll send it to GitHub, which automatically makes it accessible on the internet.
+      </div>
+
+      <h3 style="font-size:1rem; font-weight:600; margin:.75rem 0 .4rem;">Step 8a — Set up a Quarto project</h3>
+      <p>First, tell Quarto to save the rendered HTML into a folder called <code>docs</code> (GitHub Pages will look there to serve your website).</p>
+      <ol>
+        <li>In VS Code, go to <strong>File → New File</strong> and name it <code>_quarto.yml</code></li>
+        <li>Paste the following into the file and save it:</li>
+      </ol>
+
+      <pre><code>project:
+  type: website
+  output-dir: docs</code></pre>
+
+      <h3 style="font-size:1rem; font-weight:600; margin:1rem 0 .4rem;">Step 8b — Render the page</h3>
+      <ol>
+        <li>In VS Code, open the <strong>Terminal</strong> by going to <strong>Terminal → New Terminal</strong> (a black panel will appear at the bottom of VS Code)</li>
+        <li>Type the following command and press <strong>Enter</strong>:</li>
+      </ol>
+
+      <pre><code>quarto render</code></pre>
+
+      <p>You'll see some text scroll by. When it finishes, a new <code>docs</code> folder will appear in your file list containing <code>index.html</code> — that's your webpage!</p>
+
+      <div class="screenshot-wrap">
+        <div class="screenshot-label">📸 Screenshot — Running quarto render in VS Code terminal</div>
+        <img src="data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgODQwIDU2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iODQwIiBoZWlnaHQ9IjU2MCIgcng9IjgiIGZpbGw9IiMxZTFlMWUiLz48cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iODQwIiBoZWlnaHQ9IjMwIiByeD0iOCIgZmlsbD0iIzNjM2MzYyIvPjxyZWN0IHg9IjAiIHk9IjE1IiB3aWR0aD0iODQwIiBoZWlnaHQ9IjE1IiBmaWxsPSIjM2MzYzNjIi8+PHRleHQgeD0iNDIwIiB5PSIyMCIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiIGZvbnQtd2VpZ2h0PSI0MDAiIGZpbGw9IiNjY2NjY2MiIHRleHQtYW5jaG9yPSJtaWRkbGUiPmluZGV4LnFtZCDigJQgd2lsbG9taS5naXRodWIuaW8g4oCUIFZpc3VhbCBTdHVkaW8gQ29kZTwvdGV4dD48dGV4dCB4PSI4MDYiIHk9IjIwIiBmb250LWZhbWlseT0ic3lzdGVtLXVpLC1hcHBsZS1zeXN0ZW0sc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMyIgZm9udC13ZWlnaHQ9IjQwMCIgZmlsbD0iIzg4OCIgdGV4dC1hbmNob3I9InN0YXJ0Ij7inJU8L3RleHQ+PHJlY3QgeD0iMCIgeT0iMzAiIHdpZHRoPSI4NDAiIGhlaWdodD0iMjgiIHJ4PSIwIiBmaWxsPSIjM2MzYzNjIi8+PHRleHQgeD0iMTAiIHk9IjQ4IiBmb250LWZhbWlseT0ic3lzdGVtLXVpLC1hcHBsZS1zeXN0ZW0sc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSIgZm9udC13ZWlnaHQ9IjQwMCIgZmlsbD0iI2NjY2NjYyIgdGV4dC1hbmNob3I9InN0YXJ0Ij5GaWxlPC90ZXh0Pjx0ZXh0IHg9Ijc2IiB5PSI0OCIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiIGZvbnQtd2VpZ2h0PSI0MDAiIGZpbGw9IiNjY2NjY2MiIHRleHQtYW5jaG9yPSJzdGFydCI+RWRpdDwvdGV4dD48dGV4dCB4PSIxNDIiIHk9IjQ4IiBmb250LWZhbWlseT0ic3lzdGVtLXVpLC1hcHBsZS1zeXN0ZW0sc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSIgZm9udC13ZWlnaHQ9IjQwMCIgZmlsbD0iI2NjY2NjYyIgdGV4dC1hbmNob3I9InN0YXJ0Ij5TZWxlY3Rpb248L3RleHQ+PHRleHQgeD0iMjA4IiB5PSI0OCIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiIGZvbnQtd2VpZ2h0PSI0MDAiIGZpbGw9IiNjY2NjY2MiIHRleHQtYW5jaG9yPSJzdGFydCI+VmlldzwvdGV4dD48dGV4dCB4PSIyNzQiIHk9IjQ4IiBmb250LWZhbWlseT0ic3lzdGVtLXVpLC1hcHBsZS1zeXN0ZW0sc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSIgZm9udC13ZWlnaHQ9IjQwMCIgZmlsbD0iI2NjY2NjYyIgdGV4dC1hbmNob3I9InN0YXJ0Ij5UZXJtaW5hbDwvdGV4dD48dGV4dCB4PSIzNDAiIHk9IjQ4IiBmb250LWZhbWlseT0ic3lzdGVtLXVpLC1hcHBsZS1zeXN0ZW0sc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSIgZm9udC13ZWlnaHQ9IjQwMCIgZmlsbD0iI2NjY2NjYyIgdGV4dC1hbmNob3I9InN0YXJ0Ij5IZWxwPC90ZXh0PjxyZWN0IHg9IjAiIHk9IjU4IiB3aWR0aD0iNDgiIGhlaWdodD0iNTAyIiByeD0iMCIgZmlsbD0iIzMzMzMzMyIvPjx0ZXh0IHg9IjI0IiB5PSI4NiIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTYiIGZvbnQtd2VpZ2h0PSI0MDAiIGZpbGw9IiNjY2NjY2MiIHRleHQtYW5jaG9yPSJtaWRkbGUiPuKOizwvdGV4dD48cmVjdCB4PSIwIiB5PSI1OCIgd2lkdGg9IjMiIGhlaWdodD0iNDAiIGZpbGw9IiMwMDdhY2MiLz48cmVjdCB4PSI0OCIgeT0iNTgiIHdpZHRoPSIyMTAiIGhlaWdodD0iNTAyIiByeD0iMCIgZmlsbD0iIzI1MjUyNiIvPjx0ZXh0IHg9IjYwIiB5PSI4MCIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTAiIGZvbnQtd2VpZ2h0PSI2MDAiIGZpbGw9IiNiYmIiIHRleHQtYW5jaG9yPSJzdGFydCI+RVhQTE9SRVI8L3RleHQ+PHRleHQgeD0iNTgiIHk9IjEwNSIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiIGZvbnQtd2VpZ2h0PSI0MDAiIGZpbGw9IiNlMmI5NmYiIHRleHQtYW5jaG9yPSJzdGFydCI+4pa8IFdJTExPTUkuR0lUSFVCLklPPC90ZXh0Pjx0ZXh0IHg9IjcyIiB5PSIxMjMiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksLWFwcGxlLXN5c3RlbSxzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIiBmb250LXdlaWdodD0iNDAwIiBmaWxsPSIjZTJiOTZmIiB0ZXh0LWFuY2hvcj0ic3RhcnQiPuKWvCBkb2NzPC90ZXh0Pjx0ZXh0IHg9Ijg2IiB5PSIxNDEiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksLWFwcGxlLXN5c3RlbSxzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIiBmb250LXdlaWdodD0iNDAwIiBmaWxsPSIjY2NjY2NjIiB0ZXh0LWFuY2hvcj0ic3RhcnQiPiAgIGluZGV4Lmh0bWw8L3RleHQ+PHRleHQgeD0iNzIiIHk9IjE1OSIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiIGZvbnQtd2VpZ2h0PSI0MDAiIGZpbGw9IiNjY2NjY2MiIHRleHQtYW5jaG9yPSJzdGFydCI+ICAgX3F1YXJ0by55bWw8L3RleHQ+PHRleHQgeD0iNzIiIHk9IjE3NyIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiIGZvbnQtd2VpZ2h0PSI0MDAiIGZpbGw9IiNjY2NjY2MiIHRleHQtYW5jaG9yPSJzdGFydCI+ICAgaW5kZXgucW1kPC90ZXh0Pjx0ZXh0IHg9IjcyIiB5PSIxOTUiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksLWFwcGxlLXN5c3RlbSxzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIiBmb250LXdlaWdodD0iNDAwIiBmaWxsPSIjY2NjY2NjIiB0ZXh0LWFuY2hvcj0ic3RhcnQiPiAgIFJFQURNRS5tZDwvdGV4dD48cmVjdCB4PSIyNTgiIHk9IjU4IiB3aWR0aD0iNTgyIiBoZWlnaHQ9IjM4IiByeD0iMCIgZmlsbD0iIzJkMmQyZCIvPjxyZWN0IHg9IjI1OCIgeT0iNTgiIHdpZHRoPSIxMzAiIGhlaWdodD0iMzgiIHJ4PSIwIiBmaWxsPSIjMWUxZTFlIi8+PGxpbmUgeDE9IjI1OCIgeTE9IjU4IiB4Mj0iMzg4IiB5Mj0iNTgiIHN0cm9rZT0iIzAwN2FjYyIgc3Ryb2tlLXdpZHRoPSIyIi8+PHRleHQgeD0iMjY4IiB5PSI4MSIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTIiIGZvbnQtd2VpZ2h0PSI0MDAiIGZpbGw9IiNjY2NjY2MiIHRleHQtYW5jaG9yPSJzdGFydCI+aW5kZXgucW1kPC90ZXh0PjxyZWN0IHg9IjI1OCIgeT0iOTYiIHdpZHRoPSI1ODIiIGhlaWdodD0iMjg5IiByeD0iMCIgZmlsbD0iIzFlMWUxZSIvPjx0ZXh0IHg9IjI2NiIgeT0iMTE0IiBmb250LWZhbWlseT0ic3lzdGVtLXVpLC1hcHBsZS1zeXN0ZW0sc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMCIgZm9udC13ZWlnaHQ9IjQwMCIgZmlsbD0iIzRlNGU0ZSIgdGV4dC1hbmNob3I9InN0YXJ0Ij4xPC90ZXh0Pjx0ZXh0IHg9IjMwMiIgeT0iMTE0IiBmb250LWZhbWlseT0ic3lzdGVtLXVpLC1hcHBsZS1zeXN0ZW0sc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMiIgZm9udC13ZWlnaHQ9IjQwMCIgZmlsbD0iIzYwOGI0ZSIgdGV4dC1hbmNob3I9InN0YXJ0Ij4tLS08L3RleHQ+PHRleHQgeD0iMjY2IiB5PSIxMzMiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksLWFwcGxlLXN5c3RlbSxzYW5zLXNlcmlmIiBmb250LXNpemU9IjEwIiBmb250LXdlaWdodD0iNDAwIiBmaWxsPSIjNGU0ZTRlIiB0ZXh0LWFuY2hvcj0ic3RhcnQiPjI8L3RleHQ+PHRleHQgeD0iMzAyIiB5PSIxMzMiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksLWFwcGxlLXN5c3RlbSxzYW5zLXNlcmlmIiBmb250LXNpemU9IjEyIiBmb250LXdlaWdodD0iNDAwIiBmaWxsPSIjY2U5MTc4IiB0ZXh0LWFuY2hvcj0ic3RhcnQiPnRpdGxlOiAiTXkgRmlyc3QgV2VicGFnZSI8L3RleHQ+PHRleHQgeD0iMjY2IiB5PSIxNTIiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksLWFwcGxlLXN5c3RlbSxzYW5zLXNlcmlmIiBmb250LXNpemU9IjEwIiBmb250LXdlaWdodD0iNDAwIiBmaWxsPSIjNGU0ZTRlIiB0ZXh0LWFuY2hvcj0ic3RhcnQiPjM8L3RleHQ+PHRleHQgeD0iMzAyIiB5PSIxNTIiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksLWFwcGxlLXN5c3RlbSxzYW5zLXNlcmlmIiBmb250LXNpemU9IjEyIiBmb250LXdlaWdodD0iNDAwIiBmaWxsPSIjY2U5MTc4IiB0ZXh0LWFuY2hvcj0ic3RhcnQiPmF1dGhvcjogIllvdXIgTmFtZSI8L3RleHQ+PHRleHQgeD0iMjY2IiB5PSIxNzEiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksLWFwcGxlLXN5c3RlbSxzYW5zLXNlcmlmIiBmb250LXNpemU9IjEwIiBmb250LXdlaWdodD0iNDAwIiBmaWxsPSIjNGU0ZTRlIiB0ZXh0LWFuY2hvcj0ic3RhcnQiPjQ8L3RleHQ+PHRleHQgeD0iMzAyIiB5PSIxNzEiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksLWFwcGxlLXN5c3RlbSxzYW5zLXNlcmlmIiBmb250LXNpemU9IjEyIiBmb250LXdlaWdodD0iNDAwIiBmaWxsPSIjOWNkY2ZlIiB0ZXh0LWFuY2hvcj0ic3RhcnQiPmRhdGU6IHRvZGF5PC90ZXh0Pjx0ZXh0IHg9IjI2NiIgeT0iMTkwIiBmb250LWZhbWlseT0ic3lzdGVtLXVpLC1hcHBsZS1zeXN0ZW0sc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMCIgZm9udC13ZWlnaHQ9IjQwMCIgZmlsbD0iIzRlNGU0ZSIgdGV4dC1hbmNob3I9InN0YXJ0Ij41PC90ZXh0Pjx0ZXh0IHg9IjMwMiIgeT0iMTkwIiBmb250LWZhbWlseT0ic3lzdGVtLXVpLC1hcHBsZS1zeXN0ZW0sc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMiIgZm9udC13ZWlnaHQ9IjQwMCIgZmlsbD0iIzljZGNmZSIgdGV4dC1hbmNob3I9InN0YXJ0Ij5mb3JtYXQ6PC90ZXh0Pjx0ZXh0IHg9IjI2NiIgeT0iMjA5IiBmb250LWZhbWlseT0ic3lzdGVtLXVpLC1hcHBsZS1zeXN0ZW0sc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMCIgZm9udC13ZWlnaHQ9IjQwMCIgZmlsbD0iIzRlNGU0ZSIgdGV4dC1hbmNob3I9InN0YXJ0Ij42PC90ZXh0Pjx0ZXh0IHg9IjMwMiIgeT0iMjA5IiBmb250LWZhbWlseT0ic3lzdGVtLXVpLC1hcHBsZS1zeXN0ZW0sc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMiIgZm9udC13ZWlnaHQ9IjQwMCIgZmlsbD0iIzljZGNmZSIgdGV4dC1hbmNob3I9InN0YXJ0Ij4gIGh0bWw6PC90ZXh0Pjx0ZXh0IHg9IjI2NiIgeT0iMjI4IiBmb250LWZhbWlseT0ic3lzdGVtLXVpLC1hcHBsZS1zeXN0ZW0sc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMCIgZm9udC13ZWlnaHQ9IjQwMCIgZmlsbD0iIzRlNGU0ZSIgdGV4dC1hbmNob3I9InN0YXJ0Ij43PC90ZXh0Pjx0ZXh0IHg9IjMwMiIgeT0iMjI4IiBmb250LWZhbWlseT0ic3lzdGVtLXVpLC1hcHBsZS1zeXN0ZW0sc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMiIgZm9udC13ZWlnaHQ9IjQwMCIgZmlsbD0iIzljZGNmZSIgdGV4dC1hbmNob3I9InN0YXJ0Ij4gICAgdGhlbWU6IGNvc21vPC90ZXh0Pjx0ZXh0IHg9IjI2NiIgeT0iMjQ3IiBmb250LWZhbWlseT0ic3lzdGVtLXVpLC1hcHBsZS1zeXN0ZW0sc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMCIgZm9udC13ZWlnaHQ9IjQwMCIgZmlsbD0iIzRlNGU0ZSIgdGV4dC1hbmNob3I9InN0YXJ0Ij44PC90ZXh0Pjx0ZXh0IHg9IjMwMiIgeT0iMjQ3IiBmb250LWZhbWlseT0ic3lzdGVtLXVpLC1hcHBsZS1zeXN0ZW0sc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMiIgZm9udC13ZWlnaHQ9IjQwMCIgZmlsbD0iIzljZGNmZSIgdGV4dC1hbmNob3I9InN0YXJ0Ij4gICAgdG9jOiB0cnVlPC90ZXh0Pjx0ZXh0IHg9IjI2NiIgeT0iMjY2IiBmb250LWZhbWlseT0ic3lzdGVtLXVpLC1hcHBsZS1zeXN0ZW0sc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMCIgZm9udC13ZWlnaHQ9IjQwMCIgZmlsbD0iIzRlNGU0ZSIgdGV4dC1hbmNob3I9InN0YXJ0Ij45PC90ZXh0Pjx0ZXh0IHg9IjMwMiIgeT0iMjY2IiBmb250LWZhbWlseT0ic3lzdGVtLXVpLC1hcHBsZS1zeXN0ZW0sc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMiIgZm9udC13ZWlnaHQ9IjQwMCIgZmlsbD0iIzYwOGI0ZSIgdGV4dC1hbmNob3I9InN0YXJ0Ij4tLS08L3RleHQ+PHRleHQgeD0iMjY2IiB5PSIyODUiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksLWFwcGxlLXN5c3RlbSxzYW5zLXNlcmlmIiBmb250LXNpemU9IjEwIiBmb250LXdlaWdodD0iNDAwIiBmaWxsPSIjNGU0ZTRlIiB0ZXh0LWFuY2hvcj0ic3RhcnQiPjEwPC90ZXh0Pjx0ZXh0IHg9IjMwMiIgeT0iMjg1IiBmb250LWZhbWlseT0ic3lzdGVtLXVpLC1hcHBsZS1zeXN0ZW0sc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMiIgZm9udC13ZWlnaHQ9IjQwMCIgZmlsbD0iI2NjYyIgdGV4dC1hbmNob3I9InN0YXJ0Ij48L3RleHQ+PHRleHQgeD0iMjY2IiB5PSIzMDQiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksLWFwcGxlLXN5c3RlbSxzYW5zLXNlcmlmIiBmb250LXNpemU9IjEwIiBmb250LXdlaWdodD0iNDAwIiBmaWxsPSIjNGU0ZTRlIiB0ZXh0LWFuY2hvcj0ic3RhcnQiPjExPC90ZXh0Pjx0ZXh0IHg9IjMwMiIgeT0iMzA0IiBmb250LWZhbWlseT0ic3lzdGVtLXVpLC1hcHBsZS1zeXN0ZW0sc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMiIgZm9udC13ZWlnaHQ9IjQwMCIgZmlsbD0iIzU2OWNkNiIgdGV4dC1hbmNob3I9InN0YXJ0Ij4jIyBXZWxjb21lITwvdGV4dD48dGV4dCB4PSIyNjYiIHk9IjMyMyIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTAiIGZvbnQtd2VpZ2h0PSI0MDAiIGZpbGw9IiM0ZTRlNGUiIHRleHQtYW5jaG9yPSJzdGFydCI+MTI8L3RleHQ+PHRleHQgeD0iMzAyIiB5PSIzMjMiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksLWFwcGxlLXN5c3RlbSxzYW5zLXNlcmlmIiBmb250LXNpemU9IjEyIiBmb250LXdlaWdodD0iNDAwIiBmaWxsPSIjY2NjIiB0ZXh0LWFuY2hvcj0ic3RhcnQiPjwvdGV4dD48dGV4dCB4PSIyNjYiIHk9IjM0MiIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTAiIGZvbnQtd2VpZ2h0PSI0MDAiIGZpbGw9IiM0ZTRlNGUiIHRleHQtYW5jaG9yPSJzdGFydCI+MTM8L3RleHQ+PHRleHQgeD0iMzAyIiB5PSIzNDIiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksLWFwcGxlLXN5c3RlbSxzYW5zLXNlcmlmIiBmb250LXNpemU9IjEyIiBmb250LXdlaWdodD0iNDAwIiBmaWxsPSIjY2NjIiB0ZXh0LWFuY2hvcj0ic3RhcnQiPkhlbGxvISBUaGlzIGlzIG15IGZpcnN0IHdlYnBhZ2UsIGJ1aWx0PC90ZXh0Pjx0ZXh0IHg9IjI2NiIgeT0iMzYxIiBmb250LWZhbWlseT0ic3lzdGVtLXVpLC1hcHBsZS1zeXN0ZW0sc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMCIgZm9udC13ZWlnaHQ9IjQwMCIgZmlsbD0iIzRlNGU0ZSIgdGV4dC1hbmNob3I9InN0YXJ0Ij4xNDwvdGV4dD48dGV4dCB4PSIzMDIiIHk9IjM2MSIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTIiIGZvbnQtd2VpZ2h0PSI0MDAiIGZpbGw9IiNjY2MiIHRleHQtYW5jaG9yPSJzdGFydCI+d2l0aCBbUXVhcnRvXShodHRwczovL3F1YXJ0by5vcmcpLjwvdGV4dD48bGluZSB4MT0iMjU4IiB5MT0iMzg1IiB4Mj0iODQwIiB5Mj0iMzg1IiBzdHJva2U9IiMzMzMiIHN0cm9rZS13aWR0aD0iMS41Ii8+PHJlY3QgeD0iMjU4IiB5PSIzODUiIHdpZHRoPSI1ODIiIGhlaWdodD0iMTc1IiByeD0iMCIgZmlsbD0iIzFlMWUxZSIvPjxyZWN0IHg9IjI1OCIgeT0iMzg1IiB3aWR0aD0iNTgyIiBoZWlnaHQ9IjI4IiByeD0iMCIgZmlsbD0iIzI1MjUyNiIvPjx0ZXh0IHg9IjI2OCIgeT0iNDAzIiBmb250LWZhbWlseT0ic3lzdGVtLXVpLC1hcHBsZS1zeXN0ZW0sc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMCIgZm9udC13ZWlnaHQ9IjYwMCIgZmlsbD0iI2NjYyIgdGV4dC1hbmNob3I9InN0YXJ0Ij5URVJNSU5BTDwvdGV4dD48dGV4dCB4PSIzNDIiIHk9IjQwMyIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTAiIGZvbnQtd2VpZ2h0PSI0MDAiIGZpbGw9IiM2NjYiIHRleHQtYW5jaG9yPSJzdGFydCI+UFJPQkxFTVM8L3RleHQ+PHRleHQgeD0iNDE4IiB5PSI0MDMiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksLWFwcGxlLXN5c3RlbSxzYW5zLXNlcmlmIiBmb250LXNpemU9IjEwIiBmb250LXdlaWdodD0iNDAwIiBmaWxsPSIjNjY2IiB0ZXh0LWFuY2hvcj0ic3RhcnQiPk9VVFBVVDwvdGV4dD48dGV4dCB4PSI4MTgiIHk9IjQwMyIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGZvbnQtd2VpZ2h0PSI0MDAiIGZpbGw9IiM4ODgiIHRleHQtYW5jaG9yPSJzdGFydCI+KzwvdGV4dD48dGV4dCB4PSIyNjYiIHk9IjQyOSIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiIGZvbnQtd2VpZ2h0PSI0MDAiIGZpbGw9IiNjY2NjY2MiIHRleHQtYW5jaG9yPSJzdGFydCI+UFMgQzpcVXNlcnNceW91cm5hbWVcRG9jdW1lbnRzXHdpbGxvbWkuZ2l0aHViLmlvJmd0OyBxdWFydG8gcmVuZGVyPC90ZXh0Pjx0ZXh0IHg9IjI2NiIgeT0iNDQ2IiBmb250LWZhbWlseT0ic3lzdGVtLXVpLC1hcHBsZS1zeXN0ZW0sc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSIgZm9udC13ZWlnaHQ9IjQwMCIgZmlsbD0iI2NjYyIgdGV4dC1hbmNob3I9InN0YXJ0Ij48L3RleHQ+PHRleHQgeD0iMjY2IiB5PSI0NjMiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksLWFwcGxlLXN5c3RlbSxzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIiBmb250LXdlaWdodD0iNDAwIiBmaWxsPSIjNGVjOWIwIiB0ZXh0LWFuY2hvcj0ic3RhcnQiPlvinJNdICBSZW5kZXJpbmcgaW5kZXgucW1kPC90ZXh0Pjx0ZXh0IHg9IjI2NiIgeT0iNDgwIiBmb250LWZhbWlseT0ic3lzdGVtLXVpLC1hcHBsZS1zeXN0ZW0sc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSIgZm9udC13ZWlnaHQ9IjQwMCIgZmlsbD0iIzRlYzliMCIgdGV4dC1hbmNob3I9InN0YXJ0Ij5b4pyTXSAgT3V0cHV0IGNyZWF0ZWQ6IGRvY3MvaW5kZXguaHRtbDwvdGV4dD48dGV4dCB4PSIyNjYiIHk9IjQ5NyIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiIGZvbnQtd2VpZ2h0PSI0MDAiIGZpbGw9IiNjY2MiIHRleHQtYW5jaG9yPSJzdGFydCI+PC90ZXh0Pjx0ZXh0IHg9IjI2NiIgeT0iNTE0IiBmb250LWZhbWlseT0ic3lzdGVtLXVpLC1hcHBsZS1zeXN0ZW0sc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSIgZm9udC13ZWlnaHQ9IjQwMCIgZmlsbD0iI2NjY2NjYyIgdGV4dC1hbmNob3I9InN0YXJ0Ij5QUyBDOlxVc2Vyc1x5b3VybmFtZVxEb2N1bWVudHNcd2lsbG9taS5naXRodWIuaW8mZ3Q7PC90ZXh0Pjwvc3ZnPg==" alt="VS Code terminal showing the quarto render command completing successfully" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'" />
+        <div style="display:none; align-items:center; justify-content:center; height:160px; background:#f8fafc; color:#94a3b8; font-size:.85rem; gap:.5rem;">
+          📸 Screenshot will appear here
+        </div>
+      </div>
+
+      <h3 style="font-size:1rem; font-weight:600; margin:1rem 0 .4rem;">Step 8c — Send your files to GitHub (Git push)</h3>
+      <p>Now you'll send your files from your computer up to GitHub in three steps: <strong>stage</strong> (select files), <strong>commit</strong> (save a snapshot), and <strong>push</strong> (send to GitHub).</p>
+
+      <!-- Git workflow diagram -->
+      <div class="diagram">
+        <figure>
+          <svg viewBox="0 0 680 120" xmlns="http://www.w3.org/2000/svg" style="max-width:640px; width:100%;">
+            <defs>
+              <marker id="arr3" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+                <path d="M0,0 L0,6 L8,3 z" fill="#94a3b8"/>
+              </marker>
+            </defs>
+            <!-- Stage -->
+            <rect x="10" y="20" width="145" height="80" rx="10" fill="#fef9c3" stroke="#fde047" stroke-width="1.5"/>
+            <text x="82" y="44" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" font-weight="700" fill="#854d0e">1 · Stage</text>
+            <text x="82" y="62" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#713f12">Select which files</text>
+            <text x="82" y="78" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#713f12">you want to send</text>
+            <text x="82" y="93" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="9" fill="#854d0e">git add .</text>
+
+            <line x1="158" y1="60" x2="210" y2="60" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arr3)"/>
+
+            <!-- Commit -->
+            <rect x="214" y="20" width="145" height="80" rx="10" fill="#ffe4e6" stroke="#fca5a5" stroke-width="1.5"/>
+            <text x="287" y="44" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" font-weight="700" fill="#881337">2 · Commit</text>
+            <text x="287" y="62" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#9f1239">Save a labelled</text>
+            <text x="287" y="78" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#9f1239">snapshot locally</text>
+            <text x="287" y="93" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="9" fill="#881337">git commit -m "..."</text>
+
+            <line x1="362" y1="60" x2="414" y2="60" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arr3)"/>
+
+            <!-- Push -->
+            <rect x="418" y="20" width="145" height="80" rx="10" fill="#dcfce7" stroke="#86efac" stroke-width="1.5"/>
+            <text x="490" y="44" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" font-weight="700" fill="#14532d">3 · Push</text>
+            <text x="490" y="62" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#166534">Send snapshot</text>
+            <text x="490" y="78" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#166534">to GitHub</text>
+            <text x="490" y="93" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="9" fill="#14532d">git push</text>
+          </svg>
+          <figcaption>Three steps to send your files to GitHub: stage → commit → push</figcaption>
+        </figure>
+      </div>
+
+      <p>In the VS Code terminal, type these three commands one at a time, pressing <strong>Enter</strong> after each:</p>
+
+      <pre><code>git add .
+git commit -m "Add my webpage"
+git push</code></pre>
+
+      <p>If VS Code asks you to sign in to GitHub, a browser window will open — sign in and click <strong>Authorize</strong>.</p>
+
+      <div class="screenshot-wrap">
+        <div class="screenshot-label">📸 Screenshot — Running git push in VS Code terminal</div>
+        <img src="data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgODQwIDU2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iODQwIiBoZWlnaHQ9IjU2MCIgcng9IjgiIGZpbGw9IiMxZTFlMWUiLz48cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iODQwIiBoZWlnaHQ9IjMwIiByeD0iOCIgZmlsbD0iIzNjM2MzYyIvPjxyZWN0IHg9IjAiIHk9IjE1IiB3aWR0aD0iODQwIiBoZWlnaHQ9IjE1IiBmaWxsPSIjM2MzYzNjIi8+PHRleHQgeD0iNDIwIiB5PSIyMCIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiIGZvbnQtd2VpZ2h0PSI0MDAiIGZpbGw9IiNjY2NjY2MiIHRleHQtYW5jaG9yPSJtaWRkbGUiPmluZGV4LnFtZCDigJQgd2lsbG9taS5naXRodWIuaW8g4oCUIFZpc3VhbCBTdHVkaW8gQ29kZTwvdGV4dD48dGV4dCB4PSI4MDYiIHk9IjIwIiBmb250LWZhbWlseT0ic3lzdGVtLXVpLC1hcHBsZS1zeXN0ZW0sc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMyIgZm9udC13ZWlnaHQ9IjQwMCIgZmlsbD0iIzg4OCIgdGV4dC1hbmNob3I9InN0YXJ0Ij7inJU8L3RleHQ+PHJlY3QgeD0iMCIgeT0iMzAiIHdpZHRoPSI4NDAiIGhlaWdodD0iMjgiIHJ4PSIwIiBmaWxsPSIjM2MzYzNjIi8+PHRleHQgeD0iMTAiIHk9IjQ4IiBmb250LWZhbWlseT0ic3lzdGVtLXVpLC1hcHBsZS1zeXN0ZW0sc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSIgZm9udC13ZWlnaHQ9IjQwMCIgZmlsbD0iI2NjY2NjYyIgdGV4dC1hbmNob3I9InN0YXJ0Ij5GaWxlPC90ZXh0Pjx0ZXh0IHg9Ijc2IiB5PSI0OCIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiIGZvbnQtd2VpZ2h0PSI0MDAiIGZpbGw9IiNjY2NjY2MiIHRleHQtYW5jaG9yPSJzdGFydCI+RWRpdDwvdGV4dD48dGV4dCB4PSIxNDIiIHk9IjQ4IiBmb250LWZhbWlseT0ic3lzdGVtLXVpLC1hcHBsZS1zeXN0ZW0sc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSIgZm9udC13ZWlnaHQ9IjQwMCIgZmlsbD0iI2NjY2NjYyIgdGV4dC1hbmNob3I9InN0YXJ0Ij5TZWxlY3Rpb248L3RleHQ+PHRleHQgeD0iMjA4IiB5PSI0OCIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiIGZvbnQtd2VpZ2h0PSI0MDAiIGZpbGw9IiNjY2NjY2MiIHRleHQtYW5jaG9yPSJzdGFydCI+VmlldzwvdGV4dD48dGV4dCB4PSIyNzQiIHk9IjQ4IiBmb250LWZhbWlseT0ic3lzdGVtLXVpLC1hcHBsZS1zeXN0ZW0sc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSIgZm9udC13ZWlnaHQ9IjQwMCIgZmlsbD0iI2NjY2NjYyIgdGV4dC1hbmNob3I9InN0YXJ0Ij5UZXJtaW5hbDwvdGV4dD48dGV4dCB4PSIzNDAiIHk9IjQ4IiBmb250LWZhbWlseT0ic3lzdGVtLXVpLC1hcHBsZS1zeXN0ZW0sc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSIgZm9udC13ZWlnaHQ9IjQwMCIgZmlsbD0iI2NjY2NjYyIgdGV4dC1hbmNob3I9InN0YXJ0Ij5IZWxwPC90ZXh0PjxyZWN0IHg9IjAiIHk9IjU4IiB3aWR0aD0iNDgiIGhlaWdodD0iNTAyIiByeD0iMCIgZmlsbD0iIzMzMzMzMyIvPjx0ZXh0IHg9IjI0IiB5PSI4NiIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTYiIGZvbnQtd2VpZ2h0PSI0MDAiIGZpbGw9IiNjY2NjY2MiIHRleHQtYW5jaG9yPSJtaWRkbGUiPuKOizwvdGV4dD48cmVjdCB4PSIwIiB5PSI1OCIgd2lkdGg9IjMiIGhlaWdodD0iNDAiIGZpbGw9IiMwMDdhY2MiLz48cmVjdCB4PSI0OCIgeT0iNTgiIHdpZHRoPSIyMTAiIGhlaWdodD0iNTAyIiByeD0iMCIgZmlsbD0iIzI1MjUyNiIvPjx0ZXh0IHg9IjYwIiB5PSI4MCIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTAiIGZvbnQtd2VpZ2h0PSI2MDAiIGZpbGw9IiNiYmIiIHRleHQtYW5jaG9yPSJzdGFydCI+RVhQTE9SRVI8L3RleHQ+PHRleHQgeD0iNTgiIHk9IjEwNSIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiIGZvbnQtd2VpZ2h0PSI0MDAiIGZpbGw9IiNlMmI5NmYiIHRleHQtYW5jaG9yPSJzdGFydCI+4pa8IFdJTExPTUkuR0lUSFVCLklPPC90ZXh0Pjx0ZXh0IHg9IjcyIiB5PSIxMjMiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksLWFwcGxlLXN5c3RlbSxzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIiBmb250LXdlaWdodD0iNDAwIiBmaWxsPSIjZTJiOTZmIiB0ZXh0LWFuY2hvcj0ic3RhcnQiPuKWvCBkb2NzPC90ZXh0Pjx0ZXh0IHg9Ijg2IiB5PSIxNDEiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksLWFwcGxlLXN5c3RlbSxzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIiBmb250LXdlaWdodD0iNDAwIiBmaWxsPSIjY2NjY2NjIiB0ZXh0LWFuY2hvcj0ic3RhcnQiPiAgIGluZGV4Lmh0bWw8L3RleHQ+PHRleHQgeD0iNzIiIHk9IjE1OSIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiIGZvbnQtd2VpZ2h0PSI0MDAiIGZpbGw9IiNjY2NjY2MiIHRleHQtYW5jaG9yPSJzdGFydCI+ICAgX3F1YXJ0by55bWw8L3RleHQ+PHRleHQgeD0iNzIiIHk9IjE3NyIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiIGZvbnQtd2VpZ2h0PSI0MDAiIGZpbGw9IiNjY2NjY2MiIHRleHQtYW5jaG9yPSJzdGFydCI+ICAgaW5kZXgucW1kPC90ZXh0Pjx0ZXh0IHg9IjcyIiB5PSIxOTUiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksLWFwcGxlLXN5c3RlbSxzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIiBmb250LXdlaWdodD0iNDAwIiBmaWxsPSIjY2NjY2NjIiB0ZXh0LWFuY2hvcj0ic3RhcnQiPiAgIFJFQURNRS5tZDwvdGV4dD48cmVjdCB4PSIyNTgiIHk9IjU4IiB3aWR0aD0iNTgyIiBoZWlnaHQ9IjM4IiByeD0iMCIgZmlsbD0iIzJkMmQyZCIvPjxyZWN0IHg9IjI1OCIgeT0iNTgiIHdpZHRoPSIxMzAiIGhlaWdodD0iMzgiIHJ4PSIwIiBmaWxsPSIjMWUxZTFlIi8+PGxpbmUgeDE9IjI1OCIgeTE9IjU4IiB4Mj0iMzg4IiB5Mj0iNTgiIHN0cm9rZT0iIzAwN2FjYyIgc3Ryb2tlLXdpZHRoPSIyIi8+PHRleHQgeD0iMjY4IiB5PSI4MSIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTIiIGZvbnQtd2VpZ2h0PSI0MDAiIGZpbGw9IiNjY2NjY2MiIHRleHQtYW5jaG9yPSJzdGFydCI+aW5kZXgucW1kPC90ZXh0PjxyZWN0IHg9IjI1OCIgeT0iOTYiIHdpZHRoPSI1ODIiIGhlaWdodD0iMjg5IiByeD0iMCIgZmlsbD0iIzFlMWUxZSIvPjxsaW5lIHgxPSIyNTgiIHkxPSIzODUiIHgyPSI4NDAiIHkyPSIzODUiIHN0cm9rZT0iIzMzMyIgc3Ryb2tlLXdpZHRoPSIxLjUiLz48cmVjdCB4PSIyNTgiIHk9IjM4NSIgd2lkdGg9IjU4MiIgaGVpZ2h0PSIxNzUiIHJ4PSIwIiBmaWxsPSIjMWUxZTFlIi8+PHJlY3QgeD0iMjU4IiB5PSIzODUiIHdpZHRoPSI1ODIiIGhlaWdodD0iMjgiIHJ4PSIwIiBmaWxsPSIjMjUyNTI2Ii8+PHRleHQgeD0iMjY4IiB5PSI0MDMiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksLWFwcGxlLXN5c3RlbSxzYW5zLXNlcmlmIiBmb250LXNpemU9IjEwIiBmb250LXdlaWdodD0iNjAwIiBmaWxsPSIjY2NjIiB0ZXh0LWFuY2hvcj0ic3RhcnQiPlRFUk1JTkFMPC90ZXh0Pjx0ZXh0IHg9IjM0MiIgeT0iNDAzIiBmb250LWZhbWlseT0ic3lzdGVtLXVpLC1hcHBsZS1zeXN0ZW0sc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMCIgZm9udC13ZWlnaHQ9IjQwMCIgZmlsbD0iIzY2NiIgdGV4dC1hbmNob3I9InN0YXJ0Ij5QUk9CTEVNUzwvdGV4dD48dGV4dCB4PSI0MTgiIHk9IjQwMyIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTAiIGZvbnQtd2VpZ2h0PSI0MDAiIGZpbGw9IiM2NjYiIHRleHQtYW5jaG9yPSJzdGFydCI+T1VUUFVUPC90ZXh0Pjx0ZXh0IHg9IjgxOCIgeT0iNDAzIiBmb250LWZhbWlseT0ic3lzdGVtLXVpLC1hcHBsZS1zeXN0ZW0sc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNCIgZm9udC13ZWlnaHQ9IjQwMCIgZmlsbD0iIzg4OCIgdGV4dC1hbmNob3I9InN0YXJ0Ij4rPC90ZXh0Pjx0ZXh0IHg9IjI2NiIgeT0iNDI5IiBmb250LWZhbWlseT0ic3lzdGVtLXVpLC1hcHBsZS1zeXN0ZW0sc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSIgZm9udC13ZWlnaHQ9IjQwMCIgZmlsbD0iI2NjY2NjYyIgdGV4dC1hbmNob3I9InN0YXJ0Ij5QUyBDOlwuLi5cd2lsbG9taS5naXRodWIuaW8mZ3Q7IGdpdCBhZGQgLjwvdGV4dD48dGV4dCB4PSIyNjYiIHk9IjQ0NiIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiIGZvbnQtd2VpZ2h0PSI0MDAiIGZpbGw9IiNjY2NjY2MiIHRleHQtYW5jaG9yPSJzdGFydCI+UFMgQzpcLi4uXHdpbGxvbWkuZ2l0aHViLmlvJmd0OyBnaXQgY29tbWl0IC1tICJBZGQgbXkgd2VicGFnZSI8L3RleHQ+PHRleHQgeD0iMjY2IiB5PSI0NjMiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksLWFwcGxlLXN5c3RlbSxzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIiBmb250LXdlaWdodD0iNDAwIiBmaWxsPSIjNGVjOWIwIiB0ZXh0LWFuY2hvcj0ic3RhcnQiPlttYXN0ZXIgKHJvb3QtY29tbWl0KSBhM2Y5YzFdIEFkZCBteSB3ZWJwYWdlPC90ZXh0Pjx0ZXh0IHg9IjI2NiIgeT0iNDgwIiBmb250LWZhbWlseT0ic3lzdGVtLXVpLC1hcHBsZS1zeXN0ZW0sc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSIgZm9udC13ZWlnaHQ9IjQwMCIgZmlsbD0iIzRlYzliMCIgdGV4dC1hbmNob3I9InN0YXJ0Ij4gNCBmaWxlcyBjaGFuZ2VkLCAzMTIgaW5zZXJ0aW9ucygrKTwvdGV4dD48dGV4dCB4PSIyNjYiIHk9IjQ5NyIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiIGZvbnQtd2VpZ2h0PSI0MDAiIGZpbGw9IiNjY2NjY2MiIHRleHQtYW5jaG9yPSJzdGFydCI+UFMgQzpcLi4uXHdpbGxvbWkuZ2l0aHViLmlvJmd0OyBnaXQgcHVzaDwvdGV4dD48dGV4dCB4PSIyNjYiIHk9IjUxNCIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiIGZvbnQtd2VpZ2h0PSI0MDAiIGZpbGw9IiM5Y2EzYWYiIHRleHQtYW5jaG9yPSJzdGFydCI+RW51bWVyYXRpbmcgb2JqZWN0czogOCwgZG9uZS48L3RleHQ+PHRleHQgeD0iMjY2IiB5PSI1MzEiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksLWFwcGxlLXN5c3RlbSxzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIiBmb250LXdlaWdodD0iNDAwIiBmaWxsPSIjOWNhM2FmIiB0ZXh0LWFuY2hvcj0ic3RhcnQiPkNvdW50aW5nIG9iamVjdHM6IDEwMCUgKDgvOCksIGRvbmUuPC90ZXh0Pjx0ZXh0IHg9IjI2NiIgeT0iNTQ4IiBmb250LWZhbWlseT0ic3lzdGVtLXVpLC1hcHBsZS1zeXN0ZW0sc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSIgZm9udC13ZWlnaHQ9IjQwMCIgZmlsbD0iIzljZGNmZSIgdGV4dC1hbmNob3I9InN0YXJ0Ij5UbyBodHRwczovL2dpdGh1Yi5jb20vd2lsbG9taS93aWxsb21pLmdpdGh1Yi5pby5naXQ8L3RleHQ+PHRleHQgeD0iMjY2IiB5PSI1NjUiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksLWFwcGxlLXN5c3RlbSxzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIiBmb250LXdlaWdodD0iNDAwIiBmaWxsPSIjNGVjOWIwIiB0ZXh0LWFuY2hvcj0ic3RhcnQiPiAqIFtuZXcgYnJhbmNoXSAgIG1hc3RlciAtJmd0OyBtYXN0ZXI8L3RleHQ+PHRleHQgeD0iMjY2IiB5PSI1ODIiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksLWFwcGxlLXN5c3RlbSxzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIiBmb250LXdlaWdodD0iNDAwIiBmaWxsPSIjY2NjY2NjIiB0ZXh0LWFuY2hvcj0ic3RhcnQiPlBTIEM6XC4uLlx3aWxsb21pLmdpdGh1Yi5pbyZndDs8L3RleHQ+PC9zdmc+" alt="VS Code terminal showing git add, commit, and push commands completing successfully" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'" />
+        <div style="display:none; align-items:center; justify-content:center; height:160px; background:#f8fafc; color:#94a3b8; font-size:.85rem; gap:.5rem;">
+          📸 Screenshot will appear here
+        </div>
+      </div>
+
+      <h3 style="font-size:1rem; font-weight:600; margin:1rem 0 .4rem;">Step 8d — Enable GitHub Pages</h3>
+      <p>The final step: tell GitHub to publish your <code>docs</code> folder as a website.</p>
+      <ol>
+        <li>Go to your repository on <a href="https://github.com" target="_blank">github.com</a></li>
+        <li>Click the <strong>Settings</strong> tab (near the top of the repository page)</li>
+        <li>In the left sidebar, click <strong>Pages</strong></li>
+        <li>Under "Branch", click the dropdown that says <strong>None</strong> and select <strong>main</strong></li>
+        <li>A second dropdown will appear — select <strong>/docs</strong></li>
+        <li>Click <strong>Save</strong></li>
+      </ol>
+
+      <div class="screenshot-wrap">
+        <div class="screenshot-label">📸 Screenshot — GitHub Pages settings with /docs folder selected</div>
+        <img src="data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgNzIwIDU0MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iNzIwIiBoZWlnaHQ9IjU0MCIgcng9IjEwIiBmaWxsPSIjMmQyZDJkIi8+PHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjcyMCIgaGVpZ2h0PSIzNiIgcng9IjEwIiBmaWxsPSIjZGVlMWU2Ii8+PHJlY3QgeD0iMCIgeT0iMTgiIHdpZHRoPSI3MjAiIGhlaWdodD0iMTgiIGZpbGw9IiNkZWUxZTYiLz48cmVjdCB4PSI1IiB5PSI1IiB3aWR0aD0iMTgwIiBoZWlnaHQ9IjMxIiByeD0iNSIgZmlsbD0id2hpdGUiLz48Y2lyY2xlIGN4PSIyMSIgY3k9IjIxIiByPSI2IiBmaWxsPSIjZGRlMWU3Ii8+PHRleHQgeD0iMzMiIHk9IjI2IiBmb250LWZhbWlseT0ic3lzdGVtLXVpLC1hcHBsZS1zeXN0ZW0sc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSIgZm9udC13ZWlnaHQ9IjQwMCIgZmlsbD0iIzM3NDE1MSIgdGV4dC1hbmNob3I9InN0YXJ0Ij5TZXR0aW5ncyDCtyB3aWxsb21pLmdpdGh1Yi48L3RleHQ+PHRleHQgeD0iMTc0IiB5PSIyNiIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iOSIgZm9udC13ZWlnaHQ9IjQwMCIgZmlsbD0iIzljYTNhZiIgdGV4dC1hbmNob3I9InN0YXJ0Ij7inJU8L3RleHQ+PHRleHQgeD0iMTkzIiB5PSIyNyIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTUiIGZvbnQtd2VpZ2h0PSI0MDAiIGZpbGw9IiM5Y2EzYWYiIHRleHQtYW5jaG9yPSJzdGFydCI+KzwvdGV4dD48dGV4dCB4PSI2NDAiIHk9IjIxIiBmb250LWZhbWlseT0ic3lzdGVtLXVpLC1hcHBsZS1zeXN0ZW0sc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMiIgZm9udC13ZWlnaHQ9IjQwMCIgZmlsbD0iIzc3NyIgdGV4dC1hbmNob3I9InN0YXJ0Ij7ilIA8L3RleHQ+PHJlY3QgeD0iNjU4IiB5PSI5IiB3aWR0aD0iMTQiIGhlaWdodD0iMTEiIHJ4PSIyIiBmaWxsPSJub25lIiBzdHJva2U9IiM3NzciIHN0cm9rZS13aWR0aD0iMS4yIi8+PHRleHQgeD0iNjg2IiB5PSIyMiIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTMiIGZvbnQtd2VpZ2h0PSI0MDAiIGZpbGw9IiM3NzciIHRleHQtYW5jaG9yPSJzdGFydCI+4pyVPC90ZXh0PjxyZWN0IHg9IjAiIHk9IjM2IiB3aWR0aD0iNzIwIiBoZWlnaHQ9IjQwIiByeD0iMCIgZmlsbD0iI2YxZjNmNCIvPjx0ZXh0IHg9IjEwIiB5PSI2MiIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTYiIGZvbnQtd2VpZ2h0PSI0MDAiIGZpbGw9IiNhYWEiIHRleHQtYW5jaG9yPSJzdGFydCI+4oaQPC90ZXh0Pjx0ZXh0IHg9IjMwIiB5PSI2MiIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTYiIGZvbnQtd2VpZ2h0PSI0MDAiIGZpbGw9IiNkMGQwZDAiIHRleHQtYW5jaG9yPSJzdGFydCI+4oaSPC90ZXh0Pjx0ZXh0IHg9IjUwIiB5PSI2MCIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTMiIGZvbnQtd2VpZ2h0PSI0MDAiIGZpbGw9IiM3NzciIHRleHQtYW5jaG9yPSJzdGFydCI+4oa7PC90ZXh0PjxyZWN0IHg9IjY2IiB5PSI0NCIgd2lkdGg9IjYxOCIgaGVpZ2h0PSIyMiIgcng9IjExIiBmaWxsPSJ3aGl0ZSIgc3Ryb2tlPSIjZTBlMGUwIiBzdHJva2Utd2lkdGg9IjEuNSIvPjx0ZXh0IHg9IjgwIiB5PSI2MCIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiIGZvbnQtd2VpZ2h0PSI0MDAiIGZpbGw9IiMzNzQxNTEiIHRleHQtYW5jaG9yPSJzdGFydCI+Z2l0aHViLmNvbS93aWxsb21pL3dpbGxvbWkuZ2l0aHViLmlvL3NldHRpbmdzL3BhZ2VzPC90ZXh0Pjx0ZXh0IHg9IjY5MCIgeT0iNjAiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksLWFwcGxlLXN5c3RlbSxzYW5zLXNlcmlmIiBmb250LXNpemU9IjE1IiBmb250LXdlaWdodD0iNDAwIiBmaWxsPSIjOWNhM2FmIiB0ZXh0LWFuY2hvcj0ic3RhcnQiPuKLrjwvdGV4dD48bGluZSB4MT0iMCIgeTE9Ijc1IiB4Mj0iNzIwIiB5Mj0iNzUiIHN0cm9rZT0iI2U1ZTdlYiIgc3Ryb2tlLXdpZHRoPSIxIi8+PHJlY3QgeD0iMCIgeT0iNzYiIHdpZHRoPSI3MjAiIGhlaWdodD0iNDY0IiByeD0iMCIgZmlsbD0id2hpdGUiLz48cmVjdCB4PSIwIiB5PSI3NiIgd2lkdGg9IjcyMCIgaGVpZ2h0PSI0OCIgcng9IjAiIGZpbGw9IiMyNDI5MmYiLz48dGV4dCB4PSIxOCIgeT0iMTA3IiBmb250LWZhbWlseT0ic3lzdGVtLXVpLC1hcHBsZS1zeXN0ZW0sc2Fucy1zZXJpZiIgZm9udC1zaXplPSIyMCIgZm9udC13ZWlnaHQ9IjQwMCIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJzdGFydCI+4qyhPC90ZXh0Pjx0ZXh0IHg9IjQ2IiB5PSIxMDciIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksLWFwcGxlLXN5c3RlbSxzYW5zLXNlcmlmIiBmb250LXNpemU9IjEzIiBmb250LXdlaWdodD0iNjAwIiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9InN0YXJ0Ij53aWxsb21pIC8gd2lsbG9taS5naXRodWIuaW88L3RleHQ+PGNpcmNsZSBjeD0iNjk1IiBjeT0iMTAwIiByPSIxNCIgZmlsbD0iIzQ0NGQ1NiIvPjx0ZXh0IHg9IjY5NSIgeT0iMTA1IiBmb250LWZhbWlseT0ic3lzdGVtLXVpLC1hcHBsZS1zeXN0ZW0sc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMiIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiPlc8L3RleHQ+PHJlY3QgeD0iMCIgeT0iMTI0IiB3aWR0aD0iNzIwIiBoZWlnaHQ9IjQwIiByeD0iMCIgZmlsbD0iI2Y2ZjhmYSIvPjxsaW5lIHgxPSIwIiB5MT0iMTY0IiB4Mj0iNzIwIiB5Mj0iMTY0IiBzdHJva2U9IiNlNWU3ZWIiIHN0cm9rZS13aWR0aD0iMSIvPjx0ZXh0IHg9IjE4IiB5PSIxNDgiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksLWFwcGxlLXN5c3RlbSxzYW5zLXNlcmlmIiBmb250LXNpemU9IjEyIiBmb250LXdlaWdodD0iNDAwIiBmaWxsPSIjNjU2ZDc2IiB0ZXh0LWFuY2hvcj0ic3RhcnQiPkNvZGU8L3RleHQ+PHRleHQgeD0iNzUiIHk9IjE0OCIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTIiIGZvbnQtd2VpZ2h0PSI0MDAiIGZpbGw9IiM2NTZkNzYiIHRleHQtYW5jaG9yPSJzdGFydCI+SXNzdWVzPC90ZXh0Pjx0ZXh0IHg9IjEzNiIgeT0iMTQ4IiBmb250LWZhbWlseT0ic3lzdGVtLXVpLC1hcHBsZS1zeXN0ZW0sc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMiIgZm9udC13ZWlnaHQ9IjQwMCIgZmlsbD0iIzY1NmQ3NiIgdGV4dC1hbmNob3I9InN0YXJ0Ij5QdWxsIHJlcXVlc3RzPC90ZXh0Pjx0ZXh0IHg9IjI2OCIgeT0iMTQ4IiBmb250LWZhbWlseT0ic3lzdGVtLXVpLC1hcHBsZS1zeXN0ZW0sc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMiIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iIzI0MjkyZiIgdGV4dC1hbmNob3I9InN0YXJ0Ij5TZXR0aW5nczwvdGV4dD48bGluZSB4MT0iMjY4IiB5MT0iMTY0IiB4Mj0iMzIwIiB5Mj0iMTY0IiBzdHJva2U9IiNmNzgxNjYiIHN0cm9rZS13aWR0aD0iMiIvPjxyZWN0IHg9IjAiIHk9IjE2NCIgd2lkdGg9IjIyMCIgaGVpZ2h0PSIzNzYiIHJ4PSIwIiBmaWxsPSIjZjZmOGZhIi8+PGxpbmUgeDE9IjIyMCIgeTE9IjE2NCIgeDI9IjIyMCIgeTI9IjU0MCIgc3Ryb2tlPSIjZTVlN2ViIiBzdHJva2Utd2lkdGg9IjEiLz48dGV4dCB4PSIxNiIgeT0iMTk0IiBmb250LWZhbWlseT0ic3lzdGVtLXVpLC1hcHBsZS1zeXN0ZW0sc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMiIgZm9udC13ZWlnaHQ9IjQwMCIgZmlsbD0iIzI0MjkyZiIgdGV4dC1hbmNob3I9InN0YXJ0Ij5HZW5lcmFsPC90ZXh0Pjx0ZXh0IHg9IjE2IiB5PSIyMTkiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksLWFwcGxlLXN5c3RlbSxzYW5zLXNlcmlmIiBmb250LXNpemU9IjEyIiBmb250LXdlaWdodD0iNDAwIiBmaWxsPSIjMjQyOTJmIiB0ZXh0LWFuY2hvcj0ic3RhcnQiPkNvbGxhYm9yYXRvcnM8L3RleHQ+PHRleHQgeD0iMTYiIHk9IjI0NCIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTIiIGZvbnQtd2VpZ2h0PSI0MDAiIGZpbGw9IiMyNDI5MmYiIHRleHQtYW5jaG9yPSJzdGFydCI+QnJhbmNoZXM8L3RleHQ+PHJlY3QgeD0iMTAiIHk9IjI1OSIgd2lkdGg9IjIwMCIgaGVpZ2h0PSIyOCIgcng9IjQiIGZpbGw9IiNkYmVhZmUiLz48dGV4dCB4PSIxNiIgeT0iMjc4IiBmb250LWZhbWlseT0ic3lzdGVtLXVpLC1hcHBsZS1zeXN0ZW0sc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMiIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iIzA5NjlkYSIgdGV4dC1hbmNob3I9InN0YXJ0Ij5QYWdlczwvdGV4dD48dGV4dCB4PSIxNiIgeT0iMjk5IiBmb250LWZhbWlseT0ic3lzdGVtLXVpLC1hcHBsZS1zeXN0ZW0sc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMiIgZm9udC13ZWlnaHQ9IjQwMCIgZmlsbD0iIzI0MjkyZiIgdGV4dC1hbmNob3I9InN0YXJ0Ij5TZWN1cml0eTwvdGV4dD48dGV4dCB4PSIyNDAiIHk9IjE5NiIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTgiIGZvbnQtd2VpZ2h0PSI3MDAiIGZpbGw9IiMyNDI5MmYiIHRleHQtYW5jaG9yPSJzdGFydCI+R2l0SHViIFBhZ2VzPC90ZXh0PjxsaW5lIHgxPSIyMzUiIHkxPSIyMTAiIHgyPSI3MDAiIHkyPSIyMTAiIHN0cm9rZT0iI2U1ZTdlYiIgc3Ryb2tlLXdpZHRoPSIxIi8+PHRleHQgeD0iMjQwIiB5PSIyMzIiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksLWFwcGxlLXN5c3RlbSxzYW5zLXNlcmlmIiBmb250LXNpemU9IjE0IiBmb250LXdlaWdodD0iNjAwIiBmaWxsPSIjMjQyOTJmIiB0ZXh0LWFuY2hvcj0ic3RhcnQiPkJ1aWxkIGFuZCBkZXBsb3ltZW50PC90ZXh0Pjx0ZXh0IHg9IjI0MCIgeT0iMjUyIiBmb250LWZhbWlseT0ic3lzdGVtLXVpLC1hcHBsZS1zeXN0ZW0sc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMiIgZm9udC13ZWlnaHQ9IjYwMCIgZmlsbD0iIzI0MjkyZiIgdGV4dC1hbmNob3I9InN0YXJ0Ij5Tb3VyY2U8L3RleHQ+PHJlY3QgeD0iMjQwIiB5PSIyNjQiIHdpZHRoPSIyMDAiIGhlaWdodD0iMzAiIHJ4PSI2IiBmaWxsPSJ3aGl0ZSIgc3Ryb2tlPSIjZDBkN2RlIiBzdHJva2Utd2lkdGg9IjEuNSIvPjx0ZXh0IHg9IjI1NCIgeT0iMjgzIiBmb250LWZhbWlseT0ic3lzdGVtLXVpLC1hcHBsZS1zeXN0ZW0sc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMiIgZm9udC13ZWlnaHQ9IjQwMCIgZmlsbD0iIzI0MjkyZiIgdGV4dC1hbmNob3I9InN0YXJ0Ij5EZXBsb3kgZnJvbSBhIGJyYW5jaCAg4pa+PC90ZXh0Pjx0ZXh0IHg9IjI0MCIgeT0iMzEyIiBmb250LWZhbWlseT0ic3lzdGVtLXVpLC1hcHBsZS1zeXN0ZW0sc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMiIgZm9udC13ZWlnaHQ9IjYwMCIgZmlsbD0iIzI0MjkyZiIgdGV4dC1hbmNob3I9InN0YXJ0Ij5CcmFuY2g8L3RleHQ+PHRleHQgeD0iMjQwIiB5PSIzMjgiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksLWFwcGxlLXN5c3RlbSxzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIiBmb250LXdlaWdodD0iNDAwIiBmaWxsPSIjNjU2ZDc2IiB0ZXh0LWFuY2hvcj0ic3RhcnQiPllvdXIgR2l0SHViIFBhZ2VzIHNpdGUgaXMgYnVpbHQgZnJvbSB0aGUgZm9sbG93aW5nIGJyYW5jaCBhbmQgZm9sZGVyLjwvdGV4dD48cmVjdCB4PSIyNDAiIHk9IjM0MiIgd2lkdGg9IjE1OCIgaGVpZ2h0PSIzMiIgcng9IjYiIGZpbGw9IndoaXRlIiBzdHJva2U9IiNkMGQ3ZGUiIHN0cm9rZS13aWR0aD0iMS41Ii8+PHRleHQgeD0iMjU0IiB5PSIzNjIiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksLWFwcGxlLXN5c3RlbSxzYW5zLXNlcmlmIiBmb250LXNpemU9IjEyIiBmb250LXdlaWdodD0iNDAwIiBmaWxsPSIjMjQyOTJmIiB0ZXh0LWFuY2hvcj0ic3RhcnQiPm1hc3RlciAg4pa+PC90ZXh0PjxyZWN0IHg9IjQwOCIgeT0iMzQyIiB3aWR0aD0iMTMwIiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0iI2RiZWFmZSIgc3Ryb2tlPSIjMDk2OWRhIiBzdHJva2Utd2lkdGg9IjIiLz48dGV4dCB4PSI0MjAiIHk9IjM2MiIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTIiIGZvbnQtd2VpZ2h0PSI3MDAiIGZpbGw9IiMwOTY5ZGEiIHRleHQtYW5jaG9yPSJzdGFydCI+L2RvY3MgIOKWvjwvdGV4dD48cmVjdCB4PSIyNDAiIHk9IjM4OCIgd2lkdGg9IjcyIiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0iIzJkYTQ0ZSIvPjx0ZXh0IHg9IjI3NiIgeT0iNDA4IiBmb250LWZhbWlseT0ic3lzdGVtLXVpLC1hcHBsZS1zeXN0ZW0sc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMyIgZm9udC13ZWlnaHQ9IjYwMCIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiPlNhdmU8L3RleHQ+PHJlY3QgeD0iMjM1IiB5PSI0MzYiIHdpZHRoPSI0NjUiIGhlaWdodD0iNzAiIHJ4PSI2IiBmaWxsPSIjZGJlYWZlIiBzdHJva2U9IiNiNmQ0ZmUiIHN0cm9rZS13aWR0aD0iMS41Ii8+PHRleHQgeD0iMjUyIiB5PSI0NTkiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksLWFwcGxlLXN5c3RlbSxzYW5zLXNlcmlmIiBmb250LXNpemU9IjEyIiBmb250LXdlaWdodD0iNjAwIiBmaWxsPSIjMDU1MGFlIiB0ZXh0LWFuY2hvcj0ic3RhcnQiPuKEuSAgWW91ciBzaXRlIHdpbGwgYmUgYnVpbHQgYW5kIGRlcGxveWVkLjwvdGV4dD48dGV4dCB4PSIyNTIiIHk9IjQ3OSIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiIGZvbnQtd2VpZ2h0PSI0MDAiIGZpbGw9IiMzNzQxNTEiIHRleHQtYW5jaG9yPSJzdGFydCI+V2FpdCAx4oCTMiBtaW51dGVzLCB0aGVuIHZpc2l0OjwvdGV4dD48dGV4dCB4PSIyNTIiIHk9IjQ5NiIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTIiIGZvbnQtd2VpZ2h0PSI2MDAiIGZpbGw9IiMwOTY5ZGEiIHRleHQtYW5jaG9yPSJzdGFydCI+aHR0cHM6Ly93aWxsb21pLmdpdGh1Yi5pbzwvdGV4dD48L3N2Zz4=" alt="GitHub repository Settings > Pages section with the /docs folder selected" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'" />
+        <div style="display:none; align-items:center; justify-content:center; height:160px; background:#f8fafc; color:#94a3b8; font-size:.85rem; gap:.5rem;">
+          📸 Screenshot will appear here
+        </div>
+      </div>
+
+      <div class="warn-box">
+        <strong>⏱️ Be patient!</strong> After clicking Save, GitHub needs a minute or two to publish your page. You'll see a blue banner that says "Your site is being built." Refresh the page after 1–2 minutes and the banner will change to green with your live URL.
+      </div>
+
+      <div class="tip">
+        <strong>✅ You're done when:</strong> the GitHub Pages section shows a green banner with the text <strong>"Your site is live at https://yourusername.github.io"</strong>.
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════
+       DONE!
+  ═══════════════════════════════════════ -->
+  <section id="done" style="margin-top:2rem;">
+    <div class="step" style="background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border-color:#86efac;">
+      <div class="step-header">
+        <div class="step-num" style="background:var(--success); font-size:1.2rem;">🎉</div>
+        <h2 style="color: var(--success);">You Did It! Your Webpage is Live
+          <span class="subtitle" style="color:#166534;">Visit <code>https://yourusername.github.io</code> in your browser</span>
+        </h2>
+      </div>
+
+      <p>Congratulations! You now have a live public webpage on the internet. Here's what you accomplished:</p>
+
+      <div class="progress-bar">
+        <span class="progress-pill done">✅ GitHub account</span>
+        <span class="progress-pill done">✅ Git installed</span>
+        <span class="progress-pill done">✅ VS Code installed</span>
+        <span class="progress-pill done">✅ Quarto installed</span>
+        <span class="progress-pill done">✅ Repository created</span>
+        <span class="progress-pill done">✅ Page written</span>
+        <span class="progress-pill done">✅ Published live!</span>
+      </div>
+
+      <hr />
+
+      <h3 style="font-size:1.05rem; font-weight:700; margin:.5rem 0 .75rem;">🌐 Visiting your live webpage</h3>
+      <p>Your webpage is now publicly accessible at:</p>
+      <div style="background:#1e293b; color:#7dd3fc; font-family:'JetBrains Mono',monospace; font-size:1rem; padding:1rem 1.25rem; border-radius:var(--radius); margin:.75rem 0; text-align:center; letter-spacing:.02em;">
+        https://<span style="color:#f472b6;">yourusername</span>.github.io
+      </div>
+      <p>Replace <code>yourusername</code> with your actual GitHub username. You can open this URL in any browser — on your phone, your computer, or share it with anyone in the world. No login required to view it.</p>
+
+      <div class="tip" style="margin-top:1rem;">
+        <strong>✅ How to find your URL from GitHub:</strong> Go to your repository on github.com → click the <strong>Settings</strong> tab → click <strong>Pages</strong> in the left sidebar. GitHub will show your live URL in a green box. You can click it directly from there.
+      </div>
+
+      <hr />
+
+      <h3 style="font-size:1.05rem; font-weight:700; margin:.5rem 0 .75rem;">What to do next</h3>
+
+      <p><strong>Update your page</strong> — Edit your <code>index.qmd</code> file in VS Code, then run <code>quarto render</code> and the three git commands again. Your live website will update within a few minutes.</p>
+
+      <p style="margin-top:.75rem;"><strong>Try different themes</strong> — In your <code>index.qmd</code>, change <code>theme: cosmo</code> to one of these: <code>flatly</code>, <code>lux</code>, <code>journal</code>, <code>minty</code>, <code>sandstone</code>, or <code>sketchy</code>. Render again to see the difference.</p>
+
+      <p style="margin-top:.75rem;"><strong>Add images</strong> — Put an image file (e.g., <code>photo.jpg</code>) in your project folder and add this to your <code>.qmd</code> file:</p>
+      <pre><code>![A caption for your image](photo.jpg)</code></pre>
+
+      <p style="margin-top:.75rem;"><strong>Learn more Quarto features</strong> — The Quarto documentation at <a href="https://quarto.org/docs/websites/" target="_blank">quarto.org/docs/websites</a> has guides on adding navigation menus, multiple pages, and more.</p>
+
+      <div style="margin-top:1.25rem;">
+        <a href="https://quarto.org/docs/websites/" target="_blank" class="btn">📚 Quarto Docs</a>
+        <a href="https://pages.github.com/" target="_blank" class="btn outline">🐙 GitHub Pages Guide</a>
+      </div>
+    </div>
+  </section>
+
 </div>
-</div>
-<p>Here is some new content</p>
+</main>
 
+<!-- ════════════════════════════════════════════════
+     FOOTER
+════════════════════════════════════════════════ -->
+<footer>
+  <div class="page-wrap">
+    <p>Built with <a href="https://quarto.org">Quarto</a> · Hosted on <a href="https://pages.github.com">GitHub Pages</a></p>
+    <p style="margin-top:.4rem; font-size:.78rem;">Tutorial by <a href="https://github.com/willomi">willomi</a></p>
+  </div>
+</footer>
 
-
-</main> <!-- /main -->
-<script id="quarto-html-after-body" type="application/javascript">
-window.document.addEventListener("DOMContentLoaded", function (event) {
-  const toggleBodyColorMode = (bsSheetEl) => {
-    const mode = bsSheetEl.getAttribute("data-mode");
-    const bodyEl = window.document.querySelector("body");
-    if (mode === "dark") {
-      bodyEl.classList.add("quarto-dark");
-      bodyEl.classList.remove("quarto-light");
-    } else {
-      bodyEl.classList.add("quarto-light");
-      bodyEl.classList.remove("quarto-dark");
-    }
-  }
-  const toggleBodyColorPrimary = () => {
-    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
-    if (bsSheetEl) {
-      toggleBodyColorMode(bsSheetEl);
-    }
-  }
-  toggleBodyColorPrimary();  
-  const icon = "";
-  const anchorJS = new window.AnchorJS();
-  anchorJS.options = {
-    placement: 'right',
-    icon: icon
-  };
-  anchorJS.add('.anchored');
-  const clipboard = new window.ClipboardJS('.code-copy-button', {
-    target: function(trigger) {
-      return trigger.previousElementSibling;
-    }
-  });
-  clipboard.on('success', function(e) {
-    // button target
-    const button = e.trigger;
-    // don't keep focus
-    button.blur();
-    // flash "checked"
-    button.classList.add('code-copy-button-checked');
-    var currentTitle = button.getAttribute("title");
-    button.setAttribute("title", "Copied!");
-    let tooltip;
-    if (window.bootstrap) {
-      button.setAttribute("data-bs-toggle", "tooltip");
-      button.setAttribute("data-bs-placement", "left");
-      button.setAttribute("data-bs-title", "Copied!");
-      tooltip = new bootstrap.Tooltip(button, 
-        { trigger: "manual", 
-          customClass: "code-copy-button-tooltip",
-          offset: [0, -8]});
-      tooltip.show();    
-    }
-    setTimeout(function() {
-      if (tooltip) {
-        tooltip.hide();
-        button.removeAttribute("data-bs-title");
-        button.removeAttribute("data-bs-toggle");
-        button.removeAttribute("data-bs-placement");
-      }
-      button.setAttribute("title", currentTitle);
-      button.classList.remove('code-copy-button-checked');
-    }, 1000);
-    // clear code selection
-    e.clearSelection();
-  });
-  function tippyHover(el, contentFn) {
-    const config = {
-      allowHTML: true,
-      content: contentFn,
-      maxWidth: 500,
-      delay: 100,
-      arrow: false,
-      appendTo: function(el) {
-          return el.parentElement;
-      },
-      interactive: true,
-      interactiveBorder: 10,
-      theme: 'quarto',
-      placement: 'bottom-start'
-    };
-    window.tippy(el, config); 
-  }
-  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
-  for (var i=0; i<noterefs.length; i++) {
-    const ref = noterefs[i];
-    tippyHover(ref, function() {
-      // use id or data attribute instead here
-      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
-      try { href = new URL(href).hash; } catch {}
-      const id = href.replace(/^#\/?/, "");
-      const note = window.document.getElementById(id);
-      return note.innerHTML;
-    });
-  }
-  const findCites = (el) => {
-    const parentEl = el.parentElement;
-    if (parentEl) {
-      const cites = parentEl.dataset.cites;
-      if (cites) {
-        return {
-          el,
-          cites: cites.split(' ')
-        };
-      } else {
-        return findCites(el.parentElement)
-      }
-    } else {
-      return undefined;
-    }
-  };
-  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
-  for (var i=0; i<bibliorefs.length; i++) {
-    const ref = bibliorefs[i];
-    const citeInfo = findCites(ref);
-    if (citeInfo) {
-      tippyHover(citeInfo.el, function() {
-        var popup = window.document.createElement('div');
-        citeInfo.cites.forEach(function(cite) {
-          var citeDiv = window.document.createElement('div');
-          citeDiv.classList.add('hanging-indent');
-          citeDiv.classList.add('csl-entry');
-          var biblioDiv = window.document.getElementById('ref-' + cite);
-          if (biblioDiv) {
-            citeDiv.innerHTML = biblioDiv.innerHTML;
-          }
-          popup.appendChild(citeDiv);
-        });
-        return popup.innerHTML;
-      });
-    }
-  }
-});
-</script>
-</div> <!-- /content -->
-
-
-
-</body></html>
+</body>
+</html>
